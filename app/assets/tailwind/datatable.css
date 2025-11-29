@@ -1,0 +1,99 @@
+.dt-button-background {
+    display: none !important;
+}
+
+.dt-button {
+    font-size: 14px !important;
+    line-height: 0.5rem !important;
+}
+
+.dt-layout-row {
+    margin-top: 0 !important;
+}
+
+div.dt-button-collection {
+    width: 125px !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+}
+
+div.dt-container select.dt-input {
+    padding-right: 1rem !important;
+    background-position: right 0 center !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 0.375rem !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.dt-paging nav {
+    display: flex !important;
+    justify-content: center !important; /* Center the pagination */
+    align-items: center !important; /* Center the pagination */
+    margin-top: 1rem !important; /* Adjust as needed */
+}
+
+.dt-paging-button {
+    border: none !important; /* Remove default border */
+    border-radius: 50% !important; /* Make it circular */
+    width: 1.5rem !important; /* Adjust width as needed */
+    height: 1.5rem !important; /* Adjust height as needed */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.5rem !important; /* Adjust padding */
+    margin: 0 0.25rem !important; /* Spacing between buttons */
+    cursor: pointer !important;
+    background: none !important;
+    font-size: 0.875rem !important; /* Adjust font size */
+}
+
+.dt-paging-button.disabled {
+    @apply !bg-transparent !text-gray-400 dark:!text-gray-200;
+}
+
+.dt-paging-button.disabled:hover {
+    @apply !bg-transparent;
+}
+
+ .dt-paging-button.current:hover {
+    border: 1px solid rgba(0, 0, 0, 0.3) !important;
+    background: none !important;
+}
+
+table.dataTable thead th, table.dataTable thead td {
+    border: none !important;
+    text-transform: uppercase !important;
+    font-weight: normal !important;
+}
+
+.dt-paging-button:hover {
+    @apply !bg-gray-100 dark:!bg-gray-600 !text-gray-900 dark:!text-white;
+}
+
+.dt-paging-button.current {
+    @apply !bg-blue-100 dark:!bg-gray-600 !text-gray-700 dark:!text-white;
+}
+
+/* Styles for table rows, including hover effects */
+table tr {
+    @apply hover:bg-gray-100 dark:hover:bg-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-200;
+}
+
+/* You might also want styles for headers and data cells */
+table th {
+    @apply px-6 py-3 text-start text-xs font-medium uppercase tracking-wider bg-white dark:bg-gray-800 text-gray-900 dark:text-white;
+}
+
+table td {
+    @apply px-6 py-4 whitespace-nowrap;
+}
+
+/* Add styles for table dividers if needed */
+table.divide-y > tbody > tr:not(:last-child) > td,
+table.divide-y > thead > tr:not(:last-child) > th {
+    @apply border-b border-gray-200 dark:border-gray-700;
+}
+
+table.dataTable > tbody > tr {
+    @apply hover:bg-gray-100 dark:hover:bg-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-200;
+}

@@ -1,0 +1,27 @@
+html {
+    overscroll-behavior: none;
+}
+
+body {
+    font-family: 'SamsungOne', Nunito, sans-serif;
+    font-size: 14px;
+    overscroll-behavior: none;
+}
+
+[type=text], input:where(:not([type])), [type=email], [type=url], [type=password], [type=number], [type=date], [type=datetime-local], [type=month], [type=search], [type=tel], [type=time], [type=week], [multiple], textarea, select {
+    font-size: 14px !important;
+}
+
+
+.btn-link {
+    text-decoration: none;
+    padding: 0;
+}
+
+.btn {
+    height: 2rem !important;
+}
+
+.hidden {
+    display: none;
+}

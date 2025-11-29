@@ -1,1 +1,138 @@
+@import "./fonts.css";
 @import "tailwindcss";
+
+@import "./../../../node_modules/preline/variants.css";
+@import "./../../../node_modules/datatables.net-dt/css/dataTables.dataTables.css";
+@import "./../../../node_modules/datatables.net-buttons-dt/css/buttons.dataTables.css";
+@import "./datatable.css";
+@import "./custom.css";
+@import "./inbuilt.css";
+@import "./date_range_picker.css";
+
+
+@import url('datatables.net-dt');
+@source "./../../../node_modules/preline/dist/*.js";
+
+@layer base {
+     input[type="email"],
+     input[type="password"],
+     input[type="text"],
+     input[type="search"],
+     input[type="datetime-local"],
+     input[type="number"],
+     textarea { /* Added text type for generality if needed */
+          @apply block w-full rounded-md border border-gray-400 dark:border-gray-700
+          bg-white dark:!bg-gray-800
+          px-3 py-2
+          text-gray-900 dark:text-white
+          placeholder-gray-400 dark:placeholder-gray-500
+          shadow-sm
+          focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500
+          disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 disabled:shadow-none dark:disabled:border-gray-700 dark:disabled:bg-gray-800/20
+          sm:text-sm sm:leading-6;
+     }
+
+     /* You might also want to style the remember me checkbox input */
+     input[type="checkbox"] {
+          @apply h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-slate-300 rounded dark:border-gray-700 dark:bg-gray-800 dark:checked:bg-blue-600 dark:checked:border-transparent
+          disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 disabled:shadow-none dark:disabled:border-gray-700 dark:disabled:bg-gray-800/20;
+     }
+
+     /* Style for the file input if you have one, adjust as needed */
+     input[type="file"] {
+          @apply block w-full text-sm text-gray-500 dark:text-gray-400
+          file:mr-4 file:py-2 file:px-4
+          file:rounded-full file:border-0
+          file:text-sm file:font-semibold
+          file:bg-blue-50 file:text-blue-700
+          hover:file:bg-blue-100 dark:file:bg-gray-700 dark:file:text-gray-200 dark:hover:file:bg-gray-600;
+     }
+
+     /* Global styles for labels */
+     label {
+          @apply text-sm font-medium text-slate-800 dark:text-slate-300 dark:!bg-gray-800;
+     }
+
+     /* Global styles for links */
+     a {
+          @apply text-blue-600 dark:text-blue-400 hover:underline;
+     }
+
+     .modal-box, .card {
+          @apply dark:!bg-neutral-800;
+     }
+}
+
+
+@plugin "daisyui";
+@plugin "@tailwindcss/forms";
+
+@plugin "daisyui/theme" {
+     name: "RichTemplate";
+     default: true;
+     prefersdark: false;
+     color-scheme: "light";
+     --color-base-100: oklch(100% 0 0);
+     --color-base-200: oklch(98% 0 0);
+     --color-base-300: oklch(95% 0 0);
+     --color-base-content: oklch(0% 0 0);
+     --color-primary: oklch(38.77% 0.201 263.90);
+     --color-primary-content: oklch(98% 0.022 95.277);
+     --color-secondary: oklch(0.61 0.1336 131.07);
+     --color-secondary-content: oklch(100% 0 0);
+     --color-accent: oklch(70% 0.14 182.503);
+     --color-accent-content: oklch(98% 0.014 180.72);
+     --color-neutral: oklch(0% 0 0);
+     --color-neutral-content: oklch(100% 0 0);
+     --color-info: oklch(74% 0.16 232.661);
+     --color-info-content: oklch(97% 0.014 254.604);
+     --color-success: oklch(62% 0.194 149.214);
+     --color-success-content: oklch(98% 0.018 155.826);
+     --color-warning: oklch(0.79 0.1349 72.97);
+     --color-warning-content: oklch(12% 0.042 264.695);
+     --color-error: oklch(0.51 0.1885 26.33);
+     --color-error-content: oklch(97% 0.013 17.38);
+     --radius-selector: 0.25rem;
+     --radius-field: 0.5rem;
+     --radius-box: 0.5rem;
+     --size-selector: 0.25rem;
+     --size-field: 0.25rem;
+     --border: 1px;
+     --depth: 0;
+     --noise: 1;
+}
+
+@plugin "daisyui/theme" {
+     name: "RichTemplateDark";
+     default: false;
+     prefersdark: true;
+     color-scheme: "dark";
+     --color-base-100: oklch(18% 0 0); /* Dark background */
+     --color-base-200: oklch(22% 0 0); /* Slightly lighter dark */
+     --color-base-300: oklch(28% 0 0); /* Even lighter dark */
+     --color-base-content: oklch(90% 0 0); /* Light text on dark background */
+     --color-primary: oklch(68.18% 0.158 243.35); /* Adjusted primary for dark */
+     --color-primary-content: oklch(98% 0.022 95.277); /* Primary content (light) */
+     --color-secondary: oklch(0.68 0.15 131.07); /* Adjusted secondary for dark */
+     --color-secondary-content: oklch(100% 0 0); /* Secondary content (light) */
+     --color-accent: oklch(70% 0.14 182.503);
+     --color-accent-content: oklch(98% 0.014 180.72);
+     --color-neutral: oklch(10% 0 0); /* Dark neutral */
+     --color-neutral-content: oklch(100% 0 0); /* Light neutral content */
+     --color-info: oklch(78% 0.18 232.661); /* Adjusted info for dark */
+     --color-info-content: oklch(97% 0.014 254.604); /* Info content (light) */
+     --color-success: oklch(66% 0.21 149.214); /* Adjusted success for dark */
+     --color-success-content: oklch(98% 0.018 155.826); /* Success content (light) */
+     --color-warning: oklch(0.82 0.15 72.97); /* Adjusted warning for dark */
+     --color-warning-content: oklch(12% 0.042 264.695); /* Warning content (dark) */
+     --color-error: oklch(0.55 0.20 26.33); /* Adjusted error for dark */
+     --color-error-content: oklch(97% 0.013 17.38); /* Error content (light) */
+     --radius-selector: 0.25rem;
+     --radius-field: 0.5rem;
+     --radius-box: 0.5rem;
+     --size-selector: 0.25rem;
+     --size-field: 0.25rem;
+     --border: 1px;
+     --depth: 0;
+     --noise: 1;
+}

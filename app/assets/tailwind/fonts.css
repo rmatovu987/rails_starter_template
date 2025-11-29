@@ -1,0 +1,36 @@
+/* SamsungOne Regular */
+@font-face {
+    font-family: 'SamsungOne';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('SamsungOne-400.woff2') format('woff2');
+}
+
+/* SamsungOne Bold */
+@font-face {
+    font-family: 'SamsungOne';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('SamsungOne-700.woff2') format('woff2');
+}
+
+/* Nunito Regular */
+@font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('Nunito-Regular.woff2') format('woff2');
+}
+
+/* Nunito Bold */
+@font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('Nunito-Bold.woff2') format('woff2');
+}
+
