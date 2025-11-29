@@ -10,9 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_29_044014) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_29_193604) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "branches", comment: "Represents branches of a business, including main and active/deleted status", force: :cascade do |t|
+    t.bigint "business_id", null: false, comment: "Reference to the owning business"
+    t.string "code", comment: "Optional short code identifying the branch"
+    t.datetime "created_at", null: false
+    t.string "encoded_key", comment: "Optional encoded key for internal reference"
+    t.boolean "isMain", default: false, null: false, comment: "Indicates if this is the main branch"
+    t.string "name", null: false, comment: "Human-readable name of the branch"
+    t.integer "status", default: 0, null: false, comment: "Status of the branch (e.g., active, inactive)"
+    t.string "unique_id", comment: "Optional unique identifier within a business"
+    t.datetime "updated_at", null: false
+    t.index ["business_id", "name"], name: "index_branches_on_business_and_name", unique: true
+    t.index ["business_id", "unique_id"], name: "index_branches_on_business_and_unique_id", unique: true, where: "(unique_id IS NOT NULL)"
+    t.index ["business_id"], name: "index_branches_on_business_id"
+    t.index ["isMain"], name: "index_branches_on_isMain"
+    t.index ["status"], name: "index_branches_on_status"
+  end
 
   create_table "businesses", comment: "Stores system businesses with unique identifiers, formats", force: :cascade do |t|
     t.datetime "created_at", null: false, comment: "Created/Updated timestamps"
@@ -53,5 +70,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_29_044014) do
     t.index ["object_changes"], name: "index_versions_on_object_changes_gin", using: :gin
   end
 
+  add_foreign_key "branches", "businesses"
   add_foreign_key "versions", "businesses"
 end
