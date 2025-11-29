@@ -4,5 +4,29 @@
 
 import { application } from "./application"
 
+import DatatableController from "./datatable_controller"
+application.register("datatable", DatatableController)
+
+import DatatablessrController from "./datatablessr_controller"
+application.register("datatablessr", DatatablessrController)
+
+import DatatablessrfilterController from "./datatablessrfilter_controller"
+application.register("datatablessrfilter", DatatablessrfilterController)
+
+import DaterangeController from "./daterange_controller"
+application.register("daterange", DaterangeController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
+
+import SearchController from "./search_controller"
+application.register("search", SearchController)
+
+import SelectController from "./select_controller"
+application.register("select", SelectController)
+
+import ToastController from "./toast_controller"
+application.register("toast", ToastController)
