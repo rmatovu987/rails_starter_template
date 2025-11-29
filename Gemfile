@@ -123,3 +123,6 @@ gem "aws-sdk-s3"
 
 # Mission control job dashboard [https://github.com/rails/mission_control-jobs]
 gem "mission_control-jobs"
+
+# Simple Form [https://github.com/heartcombo/simple_form]
+gem "simple_form"
