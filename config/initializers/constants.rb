@@ -19,6 +19,7 @@ module NodeNames
   BRANCHES = "Branches"
   ROLES = "Roles"
   USERS = "Users"
+  INVITATIONS = "Invitations"
 end
 
 module PermissionNames

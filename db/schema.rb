@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_30_024003) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_30_054002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,28 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_024003) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "addresses", comment: "Stores shared address information for businesses and other customizable entities", force: :cascade do |t|
+    t.bigint "business_id", null: false, comment: "Owning business that this address belongs to"
+    t.string "city", comment: "The city of the address"
+    t.string "country", comment: "The country of the address"
+    t.datetime "created_at", null: false, comment: "Created/Updated timestamps"
+    t.bigint "customizable_id", comment: "Polymorphic association to any customizable entity (e.g., User, Location) that this address customizes"
+    t.string "customizable_type"
+    t.string "encoded_key", comment: "Opaque key (encoded) for external references or integrations"
+    t.string "region", comment: "The region, state, or province of the address"
+    t.string "street_name", comment: "The primary street name and number of the address"
+    t.string "unique_id", comment: "Business-specific unique identifier for the address, if applicable. Can be NULL."
+    t.datetime "updated_at", null: false, comment: "Created/Updated timestamps"
+    t.index ["business_id", "customizable_type", "customizable_id"], name: "idx_addresses_on_business_customizable"
+    t.index ["business_id", "unique_id"], name: "idx_addresses_on_business_id_unique_id", unique: true, where: "(unique_id IS NOT NULL)"
+    t.index ["business_id"], name: "idx_addresses_on_business_id"
+    t.index ["business_id"], name: "index_addresses_on_business_id"
+    t.index ["city"], name: "idx_addresses_on_city"
+    t.index ["country"], name: "idx_addresses_on_country"
+    t.index ["customizable_type", "customizable_id"], name: "index_addresses_on_customizable"
+    t.index ["unique_id"], name: "idx_addresses_on_unique_id_global", unique: true, where: "(unique_id IS NOT NULL)"
+  end
+
   create_table "branches", comment: "Represents branches of a business, including main and active/deleted status", force: :cascade do |t|
     t.bigint "business_id", null: false, comment: "Reference to the owning business"
     t.string "code", comment: "Optional short code identifying the branch"
@@ -69,6 +91,49 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_024003) do
     t.datetime "updated_at", null: false, comment: "Created/Updated timestamps"
     t.index ["encoded_key"], name: "index_businesses_on_encoded_key", unique: true
     t.index ["unique_id"], name: "index_businesses_on_unique_id_not_null", unique: true, where: "(unique_id IS NOT NULL)"
+  end
+
+  create_table "contacts", comment: "Stores contact information (emails, phones) linked to businesses and customizable entities", force: :cascade do |t|
+    t.bigint "business_id", null: false, comment: "Owning business that this contact belongs to"
+    t.datetime "created_at", null: false, comment: "Created/Updated timestamps"
+    t.bigint "customizable_id", comment: "Polymorphic association to any customizable entity (e.g., User, Customer)"
+    t.string "customizable_type"
+    t.string "encoded_key", comment: "Opaque key (encoded) for external references or integrations"
+    t.string "primary_email", comment: "Primary email address of the contact"
+    t.string "primary_phone_number", comment: "Primary phone number of the contact"
+    t.string "secondary_email", comment: "Secondary email address of the contact"
+    t.string "secondary_phone_number", comment: "Secondary phone number of the contact"
+    t.string "unique_id", comment: "Business-specific unique identifier for the contact"
+    t.datetime "updated_at", null: false, comment: "Created/Updated timestamps"
+    t.index ["business_id", "customizable_type", "customizable_id"], name: "index_contacts_on_business_and_customizable"
+    t.index ["business_id", "primary_email"], name: "index_contacts_on_business_id_and_primary_email"
+    t.index ["business_id", "primary_phone_number"], name: "index_contacts_on_business_id_and_primary_phone_number"
+    t.index ["business_id", "unique_id"], name: "index_contacts_on_business_id_and_unique_id", unique: true, where: "(unique_id IS NOT NULL)"
+    t.index ["business_id"], name: "index_contacts_on_business_id"
+    t.index ["customizable_type", "customizable_id"], name: "index_contacts_on_customizable"
+  end
+
+  create_table "invitations", comment: "Tracks user invitations to a business, including status, inviter, and branch assignment", force: :cascade do |t|
+    t.datetime "accepted_at", comment: "Timestamp when the invitation was accepted"
+    t.bigint "assigned_branch_id", null: false, comment: "Branch assigned to the invited user"
+    t.bigint "business_id", null: false, comment: "Reference to the owning business"
+    t.datetime "created_at", null: false
+    t.string "email_address", comment: "Email address of the invitee"
+    t.string "encoded_key", comment: "Optional encoded key for internal reference"
+    t.string "firstname", comment: "First name of the invited user"
+    t.bigint "inviter_id", comment: "Reference to the user who sent the invitation"
+    t.string "lastname", comment: "Last name of the invited user"
+    t.integer "status", default: 0, null: false, comment: "Status of the invitation (e.g., pending = 0, accepted = 1, declined = 2)"
+    t.string "time_zone", comment: "Time zone of the invitee"
+    t.string "unique_id", comment: "Optional unique identifier within the business"
+    t.datetime "updated_at", null: false
+    t.index ["assigned_branch_id"], name: "index_invitations_on_assigned_branch_id"
+    t.index ["business_id", "email_address"], name: "index_invitations_on_business_email", unique: true
+    t.index ["business_id", "status"], name: "index_invitations_pending", where: "((status = 0) AND (accepted_at IS NULL))"
+    t.index ["business_id", "unique_id"], name: "index_invitations_on_business_unique_id", unique: true, where: "(unique_id IS NOT NULL)"
+    t.index ["business_id"], name: "index_invitations_on_business_id"
+    t.index ["inviter_id"], name: "index_invitations_on_inviter_id"
+    t.index ["status"], name: "index_invitations_on_status"
   end
 
   create_table "permission_nodes", comment: "Hierarchical nodes representing permissions within a business", force: :cascade do |t|
@@ -259,7 +324,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_024003) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "addresses", "businesses"
   add_foreign_key "branches", "businesses"
+  add_foreign_key "contacts", "businesses"
+  add_foreign_key "invitations", "branches", column: "assigned_branch_id"
+  add_foreign_key "invitations", "businesses"
+  add_foreign_key "invitations", "users", column: "inviter_id"
   add_foreign_key "permission_nodes", "businesses"
   add_foreign_key "permission_nodes", "permission_nodes", column: "parent_id"
   add_foreign_key "permissions", "businesses"

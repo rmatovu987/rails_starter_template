@@ -1,0 +1,34 @@
+Image
+
+Image
+
+Invitation to <%= @invitation.business.name %> on SenteFlow!
+
+Hi <%= @invitation.firstname %>,
+
+You have been invited by <%= @invitation.inviter.firstname %> to <%= @invitation.business.name %> on SenteFlow!
+
+This link expires in <%= @expiry %>.
+
+[Accept Invite]
+<%= accept_invitation_settings_invitations_url(token: @invitation.generate_token_for(:invitation)) %>
+
+Thanks,
+
+SenteFlow
+
+Get in touch
+
+info@senteflow.com
+
+Facebook
+
+LinkedIn
+
+Instagram
+
+YouTube
+
+Email
+
+Copyrights © SenteFlow All Rights Reserved

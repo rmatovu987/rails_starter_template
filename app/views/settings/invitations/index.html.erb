@@ -1,0 +1,51 @@
+<% content_for :title, "Invitations" %>
+
+<%= render 'shared/breadcrumbs' %>
+<div class="flex justify-between items-center">
+  <h1 class="font-bold text-4xl">Invitations</h1>
+  <%= link_to "Invite new user", new_settings_invitation_path,
+              class: "btn btn-primary",
+              data: { turbo_frame: "modal" } %>
+</div>
+
+<div id="settings_invitations" class="white_card">
+  <% if @settings_invitations.any? %>
+    <table data-controller="datatable">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+        <th>Time Zone</th>
+        <th>Status</th>
+        <th class="no-export">Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @settings_invitations.each do |settings_invitation| %>
+        <tr>
+          <td><%= settings_invitation.unique_id %></td>
+          <td><%= settings_invitation.firstname %></td>
+          <td><%= settings_invitation.lastname %></td>
+          <td><%= settings_invitation.email_address %></td>
+          <td><%= settings_invitation.time_zone %></td>
+          <td>
+            <% if settings_invitation.status == 'pending' %>
+              <%= render partial: "shared/badge", locals: { status: Statuses::PRIMARY, label: settings_invitation.status } %>
+            <% elsif settings_invitation.status == 'accepted' %>
+              <%= render partial: "shared/badge", locals: { status: Statuses::SUCCESS, label: settings_invitation.status } %>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to "View", settings_invitation, class: "btn btn-primary" %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-center my-10">No invitations found.</p>
+  <% end %>
+</div>
+

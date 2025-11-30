@@ -1,0 +1,1 @@
+json.partial! "settings/organization/invitations/settings_organization_invitation", settings_organization_invitation: @settings_organization_invitation

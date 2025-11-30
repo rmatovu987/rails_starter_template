@@ -1,0 +1,7 @@
+<% content_for :title, "New invitation" %>
+
+<%= turbo_frame_tag "modal" do %>
+  <%= render partial: "shared/modal_header", locals: { title: "New Invitation"} %>
+
+  <%= render "form", settings_invitation: @settings_invitation %>
+<% end %>

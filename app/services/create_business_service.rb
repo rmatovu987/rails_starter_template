@@ -103,6 +103,32 @@ class CreateBusinessService
     end
     puts "User errors: #{@admin_user.errors.full_messages}" if @admin_user.errors.any?
 
+    if @admin_user.contact.nil?
+      contact = Shared::Contact.new
+      contact.primary_phone_number = "0700000000"
+      contact.primary_email = "admin@#{@domain}"
+      contact.customizable_id = @admin_user.id
+      contact.customizable_type = @admin_user.class.name
+      contact.business = @business
+      contact.save!
+
+      puts "Contact errors: #{contact.errors.full_messages}" if contact.errors.any?
+    end
+
+    if @admin_user.address.nil?
+      address = Shared::Address.new
+      address.street_name = "Kampala"
+      address.city = "Kampala"
+      address.region = "Kampala"
+      address.country = "UG"
+      address.customizable_id = @admin_user.id
+      address.customizable_type = @admin_user.class.name
+      address.business = @business
+      address.save!
+
+      puts "Address errors: #{address.errors.full_messages}" if address.errors.any?
+    end
+
     user_role = Settings::UserRole.find_or_create_by(user_id: @admin_user.id, role_id: @role.id, business_id: @business.id)
     puts "UserRole errors: #{user_role.errors.full_messages}" if user_role.errors.any?
 

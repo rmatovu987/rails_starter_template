@@ -10,6 +10,9 @@ class User < ApplicationRecord
   has_secure_password
   has_many :sessions, dependent: :destroy
 
+  has_one :address, as: :customizable, class_name: "Shared::Address", dependent: :destroy
+  has_one :contact, as: :customizable, class_name: "Shared::Contact", dependent: :destroy
+
   has_one_attached :avatar do |attachable|
     attachable.variant :thumb, resize_to_limit: [ 100, 100 ]
   end

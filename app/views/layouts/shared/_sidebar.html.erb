@@ -100,13 +100,16 @@
                     accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library-icon lucide-library"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
                     accordion_items: [
                       { link_text: "Branches", link_href: settings_branches_path,
-                        link_route: '/settings/organization/branches' },
+                        link_route: '/settings/branches' },
                       { link_text: "Roles",
                         link_href: settings_roles_path,
-                        link_route: '/settings/organization/roles' },
+                        link_route: '/settings/roles' },
+                      { link_text: "Invitations",
+                        link_href: settings_invitations_path,
+                        link_route: '/settings/invitations' },
                       { link_text: "Users",
                         link_href: users_path,
-                        link_route: '/settings/organization/users' }
+                        link_route: '/users' }
                     ],
                     accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
                   }

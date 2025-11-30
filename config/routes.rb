@@ -12,6 +12,10 @@ Rails.application.routes.draw do
     resources :permissions
     resources :audit_trails, only: [ :index ]
   end
+  namespace :shared do
+    resources :contacts, only: [ :edit, :update ]
+    resources :addresses, only: [ :edit, :update ]
+  end
   namespace :settings do
     resources :branches do
       member do
@@ -23,6 +27,10 @@ Rails.application.routes.draw do
       collection do
         put "update_permission/:id", to: "roles#update_permission", as: "update_permission"
       end
+    end
+    resources :invitations do
+      get :resend_invitation, on: :member
+      get :accept_invitation, on: :collection
     end
   end
   resources :users do

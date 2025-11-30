@@ -1,0 +1,44 @@
+<%= form_with(model: contact, class: "contents",
+              data: { controller: "form", action: "submit->form#submit", form_target: "form" }
+    ) do |form| %>
+  <% if contact.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(contact.errors.count, "error") %> prohibited this contact from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% contact.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% unless contact.persisted? %>
+    <%= form.hidden_field :customizable_id, value: contact.customizable_id %>
+    <%= form.hidden_field :customizable_type, value: contact.customizable_type %>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :primary_phone_number %>
+    <%= form.telephone_field :primary_phone_number, autofocus: true, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": contact.errors[:primary_phone_number].none?, "border-red-400 focus:outline-red-600": contact.errors[:primary_phone_number].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :secondary_phone_number %>
+    <%= form.telephone_field :secondary_phone_number, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": contact.errors[:secondary_phone_number].none?, "border-red-400 focus:outline-red-600": contact.errors[:secondary_phone_number].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :primary_email %>
+    <%= form.email_field :primary_email, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": contact.errors[:primary_email].none?, "border-red-400 focus:outline-red-600": contact.errors[:primary_email].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :secondary_email %>
+    <%= form.email_field :secondary_email, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": contact.errors[:secondary_email].none?, "border-red-400 focus:outline-red-600": contact.errors[:secondary_email].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "btn btn-primary w-full" %>
+  </div>
+<% end %>
