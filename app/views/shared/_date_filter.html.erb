@@ -1,0 +1,9 @@
+<div >
+  <% if local_assigns[:label].present? %>
+    <%= form.label label %>
+  <% else %>
+    <%= form.label :date_range %>
+  <% end %>
+  <%= form.text_field :date_range, class: "form-control mb-2", id: 'daterangepicker',
+                      data: { controller: 'daterange' } %>
+</div>

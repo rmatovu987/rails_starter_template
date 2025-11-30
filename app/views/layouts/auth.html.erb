@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= content_for(:title) || "SenteFlow" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content=<%= content_for(:title) || "SenteFlow" %>>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  </head>
+
+  <body class="bg-zinc-100 transition-all duration-300 dark:bg-zinc-900">
+    <!-- ========== MAIN CONTENT ========== -->
+    <main id="content" class="h-lvh">
+      <%= render "shared/toast" %>
+      <div class="min-h-screen flex flex-col items-center justify-center py-6 px-4">
+        <div class="max-w-md w-full">
+          <div class="flex items-center justify-center pb-5">
+            <div class="w-1/2">
+              <%= image_tag("logo.svg", alt: "Logo", height: '30.4px', width: '200px', fetchpriority: "high") %>
+            </div>
+          </div>
+
+          <%= yield %>
+        </div>
+      </div>
+    </main>
+    <!-- ========== END MAIN CONTENT ========== -->
+  </body>
+</html>

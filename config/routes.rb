@@ -1,10 +1,16 @@
 Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
-  get "dashboard/index"
+  resources :dashboard, only: [ :index ] do
+    collection do
+      get :global_search
+    end
+  end
   namespace :system do
-    resources :branches
     resources :businesses
+  end
+  namespace :settings do
+    resources :branches
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

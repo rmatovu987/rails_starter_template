@@ -1,0 +1,2 @@
+module Settings::BranchesHelper
+end

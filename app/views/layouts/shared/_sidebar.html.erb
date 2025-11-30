@@ -1,0 +1,398 @@
+<!-- Sidebar -->
+<div id="richard_sidebar" class="hs-overlay [--body-scroll:true] lg:[--overlay-backdrop:false]
+ [--is-layout-affect:true] [--auto-close:lg] hs-overlay-open:translate-x-0
+    -translate-x-full transition-all duration-300 transform w-65 h-full
+
+
+ lg:translate-x-0
+ lg:open lg:opened
+
+    fixed
+    inset-y-0 start-0 z-60 bg-white border-e border-gray-200 dark:bg-neutral-800
+    dark:border-neutral-700" role="dialog" tabindex="-1" aria-label="Sidebar">
+  <div class="relative flex flex-col h-full max-h-full">
+    <div class="px-6 pt-4 flex items-center">
+      <!-- Logo -->
+      <a class="flex-none rounded-xl text-xl inline-block font-semibold focus:outline-hidden
+      focus:opacity-80" href="#" aria-label="Logo">
+        <%= link_to image_tag("logo.svg", alt: "Logo", height: '38.4px', width: '200px', fetchpriority: "high"), root_path %>
+      </a>
+      <!-- End Logo -->
+      <div class="hidden lg:block ms-2"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full
+     [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300
+      dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
+      <nav class="hs-accordion-group p-3 w-full flex flex-col flex-wrap" data-hs-accordion-always-open>
+        <ul class="flex flex-col space-y-1">
+          <li>
+            <%= link_to root_path, class: "flex items-center gap-x-3.5 py-2 px-2.5 text-sm #{active?('')}
+            text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:text-white" do %>
+              <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+              Dashboard
+            <% end %>
+          </li>
+
+          <%= render partial: "layouts/shared/side_accordion", locals: {
+            accordion_id: "accounting-accordion",
+            accordion_child_id: "accounting-accordion-child",
+            accordion_route: '/accounting',
+            accordion_title: "Accounting",
+            accordion_icon: '<svg class="shrink-0 mt-0.5 size-4" xmlns="http://www.w3.org/2000/svg"
+             width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="lucide lucide-coins-icon lucide-coins"><circle cx="8" cy="8" r="6"/>
+              <path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/>
+              <path d="m16.71 13.88.7.71-2.82 2.82"/></svg>',
+            accordion_items: [
+              { link_text: "Chart of Accounts", link_href: accounting_ledgers_path, link_route: '/accounting/ledgers' },
+              { link_text: "Journals", link_href: accounting_journals_path, link_route: '/accounting/journals' }
+            ],
+            accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+          } %>
+
+          <%
+            client_accordion_items = Settings::Client::ClientCategory.all.map do |category|
+              { link_text: category.name.pluralize,
+                link_href: kyc_clients_path(client_category_id: category.unique_id),
+                link_route: "/kyc/client?client_category_id=#{category.unique_id}" }
+            end
+
+            client_accordion_items << { link_text: "Unallocated Funds",
+                                        link_href: kyc_unallocated_funds_path,
+                                        link_route: "/kyc/unallocated_funds" }
+          %>
+          <%= render partial: "layouts/shared/side_accordion", locals: {
+            accordion_id: "client-accordion",
+            accordion_child_id: "client-accordion-child",
+            accordion_route: '/kyc/clients',
+            accordion_title: "Clients",
+            accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg"
+             width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+            accordion_items: client_accordion_items,
+            accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+          } %>
+
+          <%
+            loan_accordion_items = Credit::Loan.statuses.map do |status|
+              { link_text: status[0].humanize,
+                link_href: credit_loans_path(statuses: [status[0]]),
+                link_route: "/credit/loans?statuses=#{[status[0]]}" }
+            end
+          %>
+          <%= render partial: "layouts/shared/side_accordion", locals: {
+            accordion_id: "credit-accordion",
+            accordion_child_id: "credit-accordion-child",
+            accordion_route: '/credit',
+            accordion_title: "Loans",
+            accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg"
+            width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="lucide lucide-hand-coins-icon lucide-hand-coins">
+              <path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17"/>
+              <path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9"/>
+              <path d="m2 16 6 6"/><circle cx="16" cy="9" r="2.9"/><circle cx="6" cy="5" r="3"/></svg>',
+            accordion_items: loan_accordion_items,
+            accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+          } %>
+
+          <%= render partial: "layouts/shared/side_accordion", locals: {
+            accordion_id: "reports-accordion",
+            accordion_child_id: "reports-accordion-child",
+            accordion_route: '/reports',
+            accordion_title: "Reports",
+            accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-copy-icon lucide-book-copy"><path d="M2 16V4a2 2 0 0 1 2-2h11"/><path d="M22 18H11a2 2 0 1 0 0 4h10.5a.5.5 0 0 0 .5-.5v-15a.5.5 0 0 0-.5-.5H11a2 2 0 0 0-2 2v12"/><path d="M5 14H4a2 2 0 1 0 0 4h1"/></svg>',
+            accordion_items: [
+              {
+                render_partial: {
+                  partial: "layouts/shared/side_accordion",
+                  locals: {
+                    accordion_id: "transactions-accordion-sub-1",
+                    accordion_child_id: "transactions-accordion-sub-1-child",
+                    accordion_route: '/reports/transactions',
+                    accordion_title: "Transactions",
+                    accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library-icon lucide-library"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
+                    accordion_items: [
+                      { link_text: "Deposit Transactions", link_href: deposit_transactions_path, link_route: '/reports/transactions/deposit_transactions' },
+                      { link_text: "Loan Transactions", link_href: loan_transactions_path, link_route: '/reports/transactions/loan_transactions' },
+                      { link_text: "Journal Entries", link_href: journal_entries_path, link_route: '/reports/transactions/journal_entries' }
+                    ],
+                    accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+                  }
+                }
+              },
+              {
+                render_partial: {
+                  partial: "layouts/shared/side_accordion",
+                  locals: {
+                    accordion_id: "accounting-accordion-sub-1",
+                    accordion_child_id: "accounting-accordion-sub-1-child",
+                    accordion_route: '/reports/accounting',
+                    accordion_title: "Accounting",
+                    accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library-icon lucide-library"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
+                    accordion_items: [
+                      { link_text: "Statement of Financial Position", link_href: balance_sheet_path, link_route: '/reports/accounting/balance_sheet' },
+                      { link_text: "Profit and Loss Statement", link_href: income_statement_path, link_route: '/reports/accounting/income_statement' },
+                      # { link_text: "Cash Flow Statement", link_href: cash_flow_statement_path, link_route: '/reports/accounting/cash_flow_statement' },
+                      # { link_text: "Statement of Changes in Equity", link_href: changes_in_equity_path, link_route: '/reports/accounting/changes_in_equity' }
+                    ],
+                    accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+                  }
+                }
+              },
+              {
+                render_partial: {
+                  partial: "layouts/shared/side_accordion",
+                  locals: {
+                    accordion_id: "accounting-accordion-sub-1",
+                    accordion_child_id: "accounting-accordion-sub-1-child",
+                    accordion_route: '/reports/credit',
+                    accordion_title: "Credit",
+                    accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library-icon lucide-library"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
+                    accordion_items: [
+                      { link_text: "Loan Portfolio", link_href: loan_portfolio_path, link_route: '/reports/credit/portfolio' },
+                      { link_text: "Loan Disbursements", link_href: loan_disbursements_path, link_route: '/reports/credit/disbursements' }
+                    ],
+                    accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+                  }
+                }
+              }
+            ],
+            accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+          } %>
+
+          <li>
+            <%= link_to external_apps_path,
+                        class: "flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg
+                         hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-700
+                          dark:hover:bg-neutral-700 dark:focus:bg-neutral-700
+                           dark:text-white #{active?("/external_apps")}" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-grid-icon lucide-layout-grid shrink-0 size-4">
+                <rect width="7" height="7" x="3" y="3" rx="1"/>
+                <rect width="7" height="7" x="14" y="3" rx="1"/>
+                <rect width="7" height="7" x="14" y="14" rx="1"/>
+                <rect width="7" height="7" x="3" y="14" rx="1"/>
+              </svg>
+              External Apps
+            <% end %>
+          </li>
+
+          <li>
+            <%= link_to settings_system_audit_trails_path,
+                        class: "flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg
+                         hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-700
+                          dark:hover:bg-neutral-700 dark:focus:bg-neutral-700
+                           dark:text-white #{active?("/settings/system/audit_trails")}" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" class="lucide lucide-shield-check-icon
+         lucide-shield-check shrink-0 size-4">
+                <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+              Audit logs
+            <% end %>
+          </li>
+
+          <li>
+            <%= link_to root_path, class: "flex items-center gap-x-3.5 py-2 px-2.5 text-sm
+            text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:text-white" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-icon
+       lucide-bell shrink-0 size-4">
+                <path d="M10.268 21a2 2 0 0 0 3.464 0"/>
+                <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>
+              </svg>
+              Notifications
+            <% end %>
+          </li>
+
+          <li>
+            <%= link_to root_path, class: "flex items-center gap-x-3.5 py-2 px-2.5 text-sm
+            text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:text-white" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" class="lucide lucide-circle-help-icon
+                   lucide-circle-help shrink-0 size-4">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <path d="M12 17h.01"/>
+              </svg>
+              Get help
+            <% end %>
+          </li>
+
+          <%= render partial: "layouts/shared/side_accordion", locals: {
+            accordion_id: "settings-accordion",
+            accordion_child_id: "settings-accordion-child",
+            accordion_route: '/settings',
+            accordion_title: "Settings",
+            accordion_icon: ' <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings shrink-0 size-4">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>',
+            accordion_items: [
+              {
+                render_partial: {
+                  partial: "layouts/shared/side_accordion",
+                  locals: {
+                    accordion_id: "organisation-accordion-sub-1",
+                    accordion_child_id: "organisation-accordion-sub-1-child",
+                    accordion_title: "Business Settings",
+                    accordion_route: '/settings/organization',
+                    accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library-icon lucide-library"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
+                    accordion_items: [
+                      { link_text: "Organisation",
+                        link_href: settings_organization_business_path(current_user.business),
+                        link_route: "/settings/organization/business/#{current_user.business.obfuscated_id}" },
+                      { link_text: "Branches", link_href: settings_organization_branches_path,
+                        link_route: '/settings/organization/branches' },
+                      { link_text: "Roles",
+                        link_href: settings_organization_roles_path,
+                        link_route: '/settings/organization/roles' },
+                      { link_text: "Invitations",
+                        link_href: settings_organization_invitations_path,
+                        link_route: '/settings/organization/invitations' },
+                      { link_text: "Users",
+                        link_href: settings_organization_users_path,
+                        link_route: '/settings/organization/users' },
+                      { link_text: "Transaction Channels",
+                        link_href: settings_organization_transaction_channels_path,
+                        link_route: '/settings/organization/transaction_channels' },
+                      { link_text: "Tax Components",
+                        link_href: settings_organization_tax_components_path,
+                        link_route: '/settings/organization/tax_components' },
+                      { link_text: "Business Currencies",
+                        link_href: settings_organization_business_currencies_path,
+                        link_route: '/settings/organization/business_currencies' },
+                    ],
+                    accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+                  }
+                }
+              },
+              {
+                render_partial: {
+                  partial: "layouts/shared/side_accordion",
+                  locals: {
+                    accordion_id: "client_settings-accordion-sub-1",
+                    accordion_child_id: "client_settings-accordion-sub-1-child",
+                    accordion_route: '/settings/client',
+                    accordion_title: "Client Settings",
+                    accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library-icon lucide-library"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
+                    accordion_items: [
+                      { link_text: "Deposit Products",
+                        link_href: settings_client_deposit_products_path,
+                        link_route: '/settings/client/deposit_products' },
+                      { link_text: "Client Categories",
+                        link_href: settings_client_client_categories_path,
+                        link_route: '/settings/client/client_categories' }
+                    ],
+                    accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+                  }
+                }
+              },
+              {
+                render_partial: {
+                  partial: "layouts/shared/side_accordion",
+                  locals: {
+                    accordion_id: "accounting-accordion-sub-1",
+                    accordion_child_id: "accounting-accordion-sub-1-child",
+                    accordion_route: '/settings/credit',
+                    accordion_title: "Credit Settings",
+                    accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library-icon lucide-library"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
+                    accordion_items: [
+                      { link_text: "Loan Products",
+                        link_href: settings_credit_loan_products_path,
+                        link_route: '/settings/credit/loan_products' },
+                      { link_text: "Schedule Exempted Days",
+                        link_href: settings_credit_schedule_exempted_days_path,
+                        link_route: '/settings/credit/schedule_exempted_days' },
+                      { link_text: "Loan Aging",
+                        link_href: settings_credit_loan_ages_path,
+                        link_route: '/settings/credit/loan_ages' }
+                    ],
+                    accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+                  }
+                }
+              },
+              {
+                render_partial: {
+                  partial: "layouts/shared/side_accordion",
+                  locals: {
+                    accordion_id: "accounting-accordion-sub-1",
+                    accordion_child_id: "accounting-accordion-sub-1-child",
+                    accordion_route: '/settings/system',
+                    accordion_title: "System Settings",
+                    accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library-icon lucide-library"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
+                    accordion_items: [
+                      { link_text: "Permissions",
+                        link_href: settings_system_permissions_path,
+                        link_route: '/settings/system/permissions' },
+                      { link_text: "Permission Nodes",
+                        link_href: settings_system_permission_nodes_path,
+                        link_route: '/settings/system/permission_nodes' },
+                      { link_text: "Currencies", link_href: settings_system_currencies_path,
+                        link_route: '/settings/system/currencies' },
+                      { link_text: "Webhooks", link_href: "#", link_route: '' }
+                    ],
+                    accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+                  }
+                }
+              }
+            ],
+            accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+          } %>
+
+        </ul>
+      </nav>
+
+      <div class="bottom-0 fixed justify-center w-full flex bg-white dark:bg-neutral-800">
+        <button type="button" class="m-2 px-3 py-1 flex justify-center items-center gap-x-2 border
+ border-gray-200 text-gray-800 hover:text-gray-500 rounded-lg focus:outline-hidden
+  focus:text-gray-500 disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700
+   dark:text-neutral-200 dark:hover:text-neutral-500 dark:focus:text-neutral-500 me-2"
+                aria-haspopup="dialog" aria-expanded="false" aria-controls="richard_sidebar"
+                aria-label="Toggle navigation" data-hs-overlay="#richard_sidebar" id="toggleButton">
+          <span class="sr-only">Toggle Navigation</span>
+          <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="18" x="3" y="3" rx="2" id="rectIcon"/>
+            <path d="M15 3v18" id="verticalLine"/>
+            <path d="m10 15-3-3 3-3" id="arrowIcon"/>
+          </svg>
+          <span>Close</span>
+        </button>
+      </div>
+    </div>
+    <!-- End Content -->
+  </div>
+</div>
+<!-- End Sidebar -->
+
+
+<script nonce="<%= content_security_policy_script_nonce %>">
+    document.addEventListener(
+        'keydown',
+        (event) => {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                event.stopImmediatePropagation(); // Stops other listeners in the same phase
+            }
+        },
+        {capture: true} // Run in capture phase
+    );
+</script>

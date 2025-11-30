@@ -1,0 +1,131 @@
+<div class="sticky top-0 inset-x-0 z-20 bg-white border-y border-gray-200 px-1 sm:px-2 lg:px-4
+  dark:bg-neutral-800 dark:border-neutral-700">
+  <div class="flex items-center py-2">
+    <button type="button" class="size-8 flex justify-center items-center gap-x-2 border
+ border-gray-200 text-gray-800 hover:text-gray-500 rounded-lg focus:outline-hidden
+  focus:text-gray-500 disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700
+   dark:text-neutral-200 dark:hover:text-neutral-500 dark:focus:text-neutral-500 me-2"
+            aria-haspopup="dialog" aria-expanded="false" aria-controls="richard_sidebar"
+            aria-label="Toggle navigation" data-hs-overlay="#richard_sidebar" id="toggleButton">
+      <span class="sr-only">Toggle Navigation</span>
+      <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect width="18" height="18" x="3" y="3" rx="2" id="rectIcon"/>
+        <path d="M15 3v18" id="verticalLine"/>
+        <path d="m10 15-3-3 3-3" id="arrowIcon"/>
+      </svg>
+    </button>
+    <div class="flex-1">
+      <%# This div can be used for spacing or other elements %>
+    </div>
+
+    <div class="flex gap-2 align-middle justify-center">
+      <%# Start: Wrapper div for search input and results frame %>
+      <%# Added 'relative' positioning and a width class (adjust w-[400px] as needed) %>
+      <div class="relative lg:w-[400px]">
+        <%# Removed inline style="min-width: 400px;" from label %>
+        <label class="input h-9 lg:w-full"> <%# Added w-full to label %>
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none"
+               stroke="currentColor">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
+          </svg>
+          <%= form_tag global_search_dashboard_index_path,
+                       method: :get,
+                       data: { turbo_frame: "global_search_results",
+                               # turbo_action: "advance",
+                               controller: "search",
+                               action: "input->search#submit" },
+                       class: "flex-2" do |f| %>
+            <%# Ensure text input also takes full width within its container %>
+            <%= text_field_tag "query", nil, placeholder: "Global search filter",
+                               class: "grow focus:ring-0 w-full px-0 shadow-none" %>
+          <% end %>
+        </label>
+
+        <%# The turbo_frame_tag for results is now inside the relative parent %>
+        <%= turbo_frame_tag "global_search_results" %>
+      </div>
+      <%# End: Wrapper div for search input and results frame %>
+
+      <button type="button" class="btn btn-ghost btn-circle">
+        <span class="indicator">
+          <svg class="shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+          </svg>
+          <span class="badge badge-xs badge-error indicator-item ">
+9
+        </span>
+        </span>
+      </button>
+
+      <div class="hs-dropdown relative inline-flex">
+        <div id="hs-dropdown-with-dividers" tabindex="0" role="button" class="hs-dropdown-toggle btn btn-ghost btn-circle avatar">
+          <div class="w-10 rounded-full">
+            <% if current_user && current_user.avatar.attached? %>
+              <%= image_tag current_user.avatar %>
+            <% else %>
+              <%= image_tag 'avater.jpg', class: 'w-13 rounded-full' %>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg mt-2 divide-y divide-gray-200 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700" role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-with-dividers">
+          <div class="p-1 space-y-0.5 flex py-2 px-3">
+            <div class="avatar avatar-online avatar-placeholder">
+              <div class="w-13 rounded-full">
+                <% if current_user && current_user.avatar.attached? %>
+                  <%= image_tag current_user.avatar %>
+                <% else %>
+                  <%= image_tag 'avater.jpg', class: 'w-13 rounded-full' %>
+                <% end %>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 ms-3">
+              <% if current_user %>
+                <span class="font-bold text-xl"><%= current_user.firstname %> <%= current_user.lastname %></span>
+                <span class="description"><%= current_user.email_address %></span>
+              <% end %>
+            </div>
+          </div>
+          <div class="p-1 space-y-0.5">
+            <%= link_to my_profile_settings_organization_users_path,
+                        class: "flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user shrink-0 size-4"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              My Profile
+            <% end %>
+          </div>
+          <div class="p-1 space-y-0.5">
+            <%= link_to session_path,
+                        data: { turbo_method: :delete },
+                        class: "flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out shrink-0 size-4"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+              Logout
+            <% end %>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script nonce="<%= content_security_policy_script_nonce %>">
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleButton = document.getElementById('toggleButton');
+        const arrowIcon = document.getElementById('arrowIcon');
+
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function () {
+                if (arrowIcon.getAttribute('d') === 'm8 9 3 3-3 3') {
+                    arrowIcon.setAttribute('d', 'm10 15-3-3 3-3');
+                } else {
+                    arrowIcon.setAttribute('d', 'm8 9 3 3-3 3');
+                }
+            });
+        }
+    });
+</script>

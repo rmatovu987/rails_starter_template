@@ -1,0 +1,15 @@
+<% if @breadcrumbs.present? %>
+  <div class="breadcrumbs text-sm">
+    <ul>
+      <% @breadcrumbs.each_with_index do |crumb, index| %>
+        <li class="<%= 'text-primary' if index == @breadcrumbs.size - 1 %>">
+          <% if crumb[:url].present? %>
+            <%= link_to crumb[:name], crumb[:url] %>
+          <% else %>
+            <span><%= crumb[:name] %></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

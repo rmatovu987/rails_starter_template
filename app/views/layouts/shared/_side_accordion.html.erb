@@ -1,0 +1,111 @@
+<li class="hs-accordion" id="<%= accordion_id %>">
+  <button type="button" class = "hs-accordion-toggle w-full text-start flex items-center gap-x-3.5
+   py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-hidden
+    focus:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700
+     dark:text-neutral-200 <%= active?(accordion_route) %>" aria-expanded="true"
+          aria-controls="<%= accordion_child_id %>">
+    <%= raw accordion_icon %>
+    <%= accordion_title %>
+
+    <svg class="chevron-up ms-auto hidden size-4" xmlns="http://www.w3.org/2000/svg"
+         width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m18 15-6-6-6 6"/>
+    </svg>
+
+    <svg class="chevron-down ms-auto block size-4" xmlns="http://www.w3.org/2000/svg"
+         width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m6 9 6 6 6-6"/>
+    </svg>
+  </button>
+
+  <div id="<%= accordion_child_id %>" class="hs-accordion-content w-full overflow-hidden
+   transition-[height] duration-300 hidden" role="region" aria-labelledby="<%= accordion_id %>">
+    <ul class="<%= accordion_content_class %>">
+      <% accordion_items.each do |item| %>
+        <% if item[:render_partial] %>
+          <%= render partial: item[:render_partial][:partial], locals: item[:render_partial][:locals] %>
+        <% else %>
+          <li>
+            <%= link_to item[:link_href], class: "flex items-center gap-x-3.5 py-2 px-2.5 text-sm
+             text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100
+              dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700
+               dark:text-neutral-200 #{active?(item[:link_route])}" do %>
+              <%= item[:link_text] %>
+            <% end %>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+</li>
+
+<script nonce="<%= content_security_policy_script_nonce %>">
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[aria-expanded]').forEach(button => {
+            button.addEventListener('click', () => {
+                // Delay the icon toggle slightly to match Preline's animation
+                setTimeout(() => {
+                    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+                    const chevronUp = button.querySelector('.chevron-up');
+                    const chevronDown = button.querySelector('.chevron-down');
+
+                    if (chevronUp && chevronDown) {
+                        chevronUp.classList.toggle('hidden', !isExpanded);
+                        chevronDown.classList.toggle('hidden', isExpanded);
+                    }
+                }, 50); // adjust delay as needed to match accordion timing
+            });
+        });
+    });
+</script>
+
+
+<!-- Example usages -->
+<%#
+<%= render partial: "layouts/shared/side_accordion", locals: {
+  accordion_id: "users-accordion",
+  accordion_child_id: "users-accordion-child",
+  accordion_title: "Users",
+  accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  accordion_items: [
+    {
+      link_text: "Sub Menu 1",
+      link_href: "#",
+      link_class: "hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:text-neutral-200",
+      render_partial: {
+        partial: "layouts/shared/side_accordion",
+        locals: {
+          accordion_id: "users-accordion-sub-1",
+          accordion_child_id: "users-accordion-sub-1-child",
+          accordion_title: "Sub Menu 1",
+          accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+          accordion_items: [
+              { link_text: "Chart of Accounts", link_href: "#" },
+              { link_text: "Journals", link_href: "#" },
+              { link_text: "Journal Entries", link_href: "#" }
+            ],
+          accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+        }
+      }
+    }
+  ],
+  accordion_content_class: "hs-accordion-group ps-8 pt-1 space-y-1"
+} %>
+
+
+<%#
+<%= render partial: "layouts/shared/side_accordion", locals: {
+  accordion_id: "users-accordion",
+  accordion_child_id: "users-accordion-child",
+  accordion_title: "Users",
+  accordion_icon: '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  accordion_items: [
+              { link_text: "Chart of Accounts", link_href: "#" },
+              { link_text: "Journals", link_href: "#" },
+              { link_text: "Journal Entries", link_href: "#" }
+            ],
+  accordion_content_class: "ms-8 mt-1 space-y-1 border-s border-gray-200"
+} %>

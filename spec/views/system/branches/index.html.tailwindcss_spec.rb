@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "system/branches/index", type: :view do
   before(:each) do
     assign(:system_branches, [
-      System::Branch.create!(
+      Settings::Branch.create!(
         name: "Name",
         encoded_key: "Encoded Key",
         unique_id: "Unique",
@@ -11,7 +11,7 @@ RSpec.describe "system/branches/index", type: :view do
         status: 2,
         business: nil
       ),
-      System::Branch.create!(
+      Settings::Branch.create!(
         name: "Name",
         encoded_key: "Encoded Key",
         unique_id: "Unique",

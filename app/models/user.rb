@@ -26,7 +26,7 @@ class User < ApplicationRecord
   # Custom validation for current_password when password is being updated
   validate :password_not_same_as_current, if: :password_being_changed?
 
-  belongs_to :assigned_branch, class_name: "System::Branch"
+  belongs_to :assigned_branch, class_name: "Settings::Branch"
   belongs_to :business, class_name: "System::Business"
 
   enum :status, { inactive: 0, active: 1, suspended: 2, terminated: 3 }, default: :active, validate: true

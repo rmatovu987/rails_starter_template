@@ -1,0 +1,41 @@
+<% if status == Statuses::PRIMARY %>
+  <span class="status_badge bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
+    <span class="size-1.5 inline-block rounded-full bg-blue-800 dark:bg-blue-500"></span>
+    <%= label.humanize %>
+  </span>
+<% elsif status == Statuses::SECONDARY %>
+  <span class="status_badge bg-gray-100 text-gray-500 dark:bg-white/10 dark:text-white">
+    <span class="size-1.5 inline-block rounded-full bg-gray-500 dark:bg-white"></span>
+    <%= label.humanize %>
+  </span>
+<% elsif status == Statuses::SUCCESS %>
+  <span class="status_badge bg-emerald-100 text-emerald-800 dark:bg-emerald-800/30 dark:text-emerald-500">
+    <span class="size-1.5 inline-block rounded-full bg-emerald-800 dark:bg-emerald-500"></span>
+    <%= label.humanize %>
+  </span>
+<% elsif status == Statuses::ERROR %>
+  <span class="status_badge bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500">
+    <span class="size-1.5 inline-block rounded-full bg-red-800 dark:bg-red-500"></span>
+    <%= label.humanize %>
+  </span>
+<% elsif status == Statuses::INFO %>
+  <span class="status_badge bg-sky-100 text-blue-800 dark:bg-sky-800/30 dark:text-blue-500">
+    <span class="size-1.5 inline-block rounded-full bg-blue-800 dark:bg-blue-500"></span>
+    <%= label.humanize %>
+  </span>
+<% elsif status == Statuses::WARNING %>
+  <span class="status_badge bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">
+    <span class="size-1.5 inline-block rounded-full bg-yellow-800 dark:bg-yellow-500"></span>
+    <%= label.humanize %>
+  </span>
+<% elsif status == Statuses::ACCENT %>
+  <span class="status_badge bg-pink-100 text-pink-800 dark:bg-pink-800/30 dark:text-pink-500">
+    <span class="size-1.5 inline-block rounded-full bg-pink-800 dark:bg-pink-500"></span>
+    <%= label.humanize %>
+  </span>
+<% elsif status == Statuses::DEEP %>
+  <span class="status_badge bg-rose-100 text-rose-800 dark:bg-rose-800/30 dark:text-rose-500">
+    <span class="size-1.5 inline-block rounded-full bg-rose-800 dark:bg-rose-500"></span>
+    <%= label.humanize %>
+  </span>
+<% end %>

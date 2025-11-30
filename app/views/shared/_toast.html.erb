@@ -1,0 +1,15 @@
+<div data-controller="toast"
+     data-action="turbo:frame-load->toast#open turbo:submit-end->toast#close"
+     class="toast toast-top toast-end z-50">
+  <% if notice %>
+    <div class="alert alert-success">
+      <span><%= notice %></span>
+    </div>
+  <% end %>
+
+  <% if alert %>
+    <div class="alert alert-error">
+      <span><%= alert %></span>
+    </div>
+  <% end %>
+</div>

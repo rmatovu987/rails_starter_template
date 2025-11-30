@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "system/branches/show", type: :view do
   before(:each) do
-    assign(:system_branch, System::Branch.create!(
+    assign(:system_branch, Settings::Branch.create!(
       name: "Name",
       encoded_key: "Encoded Key",
       unique_id: "Unique",

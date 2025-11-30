@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "system/branches/edit", type: :view do
   let(:system_branch) {
-    System::Branch.create!(
+    Settings::Branch.create!(
       name: "MyString",
       encoded_key: "MyString",
       unique_id: "MyString",

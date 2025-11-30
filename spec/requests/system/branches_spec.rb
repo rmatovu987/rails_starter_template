@@ -14,7 +14,7 @@ require 'rails_helper'
 
 RSpec.describe "/system/branches", type: :request do
   # This should return the minimal set of attributes required to create a valid
-  # System::Branch. As you add validations to System::Branch, be sure to
+  # Settings::Branch. As you add validations to Settings::Branch, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
     skip("Add a hash of attributes valid for your model")
@@ -26,7 +26,7 @@ RSpec.describe "/system/branches", type: :request do
 
   describe "GET /index" do
     it "renders a successful response" do
-      System::Branch.create! valid_attributes
+      Settings::Branch.create! valid_attributes
       get system_branches_url
       expect(response).to be_successful
     end
@@ -34,7 +34,7 @@ RSpec.describe "/system/branches", type: :request do
 
   describe "GET /show" do
     it "renders a successful response" do
-      branch = System::Branch.create! valid_attributes
+      branch = Settings::Branch.create! valid_attributes
       get system_branch_url(branch)
       expect(response).to be_successful
     end
@@ -49,7 +49,7 @@ RSpec.describe "/system/branches", type: :request do
 
   describe "GET /edit" do
     it "renders a successful response" do
-      branch = System::Branch.create! valid_attributes
+      branch = Settings::Branch.create! valid_attributes
       get edit_system_branch_url(branch)
       expect(response).to be_successful
     end
@@ -57,23 +57,23 @@ RSpec.describe "/system/branches", type: :request do
 
   describe "POST /create" do
     context "with valid parameters" do
-      it "creates a new System::Branch" do
+      it "creates a new Settings::Branch" do
         expect {
           post system_branches_url, params: { system_branch: valid_attributes }
-        }.to change(System::Branch, :count).by(1)
+        }.to change(Settings::Branch, :count).by(1)
       end
 
       it "redirects to the created system_branch" do
         post system_branches_url, params: { system_branch: valid_attributes }
-        expect(response).to redirect_to(system_branch_url(System::Branch.last))
+        expect(response).to redirect_to(system_branch_url(Settings::Branch.last))
       end
     end
 
     context "with invalid parameters" do
-      it "does not create a new System::Branch" do
+      it "does not create a new Settings::Branch" do
         expect {
           post system_branches_url, params: { system_branch: invalid_attributes }
-        }.to change(System::Branch, :count).by(0)
+        }.to change(Settings::Branch, :count).by(0)
       end
 
       it "renders a response with 422 status (i.e. to display the 'new' template)" do
@@ -90,14 +90,14 @@ RSpec.describe "/system/branches", type: :request do
       }
 
       it "updates the requested system_branch" do
-        branch = System::Branch.create! valid_attributes
+        branch = Settings::Branch.create! valid_attributes
         patch system_branch_url(branch), params: { system_branch: new_attributes }
         branch.reload
         skip("Add assertions for updated state")
       end
 
       it "redirects to the system_branch" do
-        branch = System::Branch.create! valid_attributes
+        branch = Settings::Branch.create! valid_attributes
         patch system_branch_url(branch), params: { system_branch: new_attributes }
         branch.reload
         expect(response).to redirect_to(system_branch_url(branch))
@@ -106,7 +106,7 @@ RSpec.describe "/system/branches", type: :request do
 
     context "with invalid parameters" do
       it "renders a response with 422 status (i.e. to display the 'edit' template)" do
-        branch = System::Branch.create! valid_attributes
+        branch = Settings::Branch.create! valid_attributes
         patch system_branch_url(branch), params: { system_branch: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_content)
       end
@@ -115,14 +115,14 @@ RSpec.describe "/system/branches", type: :request do
 
   describe "DELETE /destroy" do
     it "destroys the requested system_branch" do
-      branch = System::Branch.create! valid_attributes
+      branch = Settings::Branch.create! valid_attributes
       expect {
         delete system_branch_url(branch)
-      }.to change(System::Branch, :count).by(-1)
+      }.to change(Settings::Branch, :count).by(-1)
     end
 
     it "redirects to the system_branches list" do
-      branch = System::Branch.create! valid_attributes
+      branch = Settings::Branch.create! valid_attributes
       delete system_branch_url(branch)
       expect(response).to redirect_to(system_branches_url)
     end

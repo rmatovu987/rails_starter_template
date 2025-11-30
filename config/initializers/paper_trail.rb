@@ -8,7 +8,7 @@ module PaperTrail
     # Define the association to the user who made the change
     # The foreign_key is 'whodunnit' because that's where PaperTrail stores the user ID
     # optional: true is added in case some versions don't have a whodunnit (e.g., initial creates by the system)
-    belongs_to :user, class_name: "System::User", foreign_key: :whodunnit, optional: true
+    belongs_to :user, foreign_key: :whodunnit, optional: true
 
     before_create :set_business_id
 
@@ -73,7 +73,7 @@ module PaperTrail
         self.full_name = "#{self.user.firstname} #{self.user.lastname}"
       elsif self.whodunnit.present?
         # Fallback if user association is not loaded, though with includes this path should be rare
-        fetched_user = System::User.find_by(id: self.whodunnit)
+        fetched_user = User.find_by(id: self.whodunnit)
         self.full_name = fetched_user ? "#{fetched_user.firstname} #{fetched_user.lastname}" : "System"
       else
         self.full_name = "System"
