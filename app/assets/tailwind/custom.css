@@ -67,3 +67,14 @@
         min-width: 28rem !important; /* responsive cap */
     }
 }
+
+.ledger-content {
+    cursor: pointer;
+    padding: 0.5rem 0 !important;
+}
+
+.ledger-content i {
+    margin-right: 5px;
+    width: 14px;
+    text-align: center;
+}

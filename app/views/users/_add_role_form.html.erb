@@ -1,0 +1,24 @@
+<%= form_with(model: @user,
+              url: assign_role_user_path(@user),
+              method: :post, class: "contents",
+              data: { controller: "form", action: "submit->form#submit", form_target: "form" }
+    ) do |form| %>
+
+  <div class="my-5">
+    <%= form.label :role_id %>
+    <%= render partial: 'shared/select',
+               locals: {
+                 placeholder: "Select a role",
+                 form: form,
+                 name: :role_id,
+                 selected_option: nil,
+                 icon: nil,
+                 options: Settings::Organization::Role.all.order(name: :asc)
+               } %>
+  </div>
+
+
+  <div class="inline">
+    <%= form.submit "Assign Role", class: "btn btn-primary w-full" %>
+  </div>
+<% end %>

@@ -1,0 +1,52 @@
+<% content_for :title, "Audit Trails" %>
+
+<%= render 'shared/breadcrumbs' %>
+<div class="flex justify-between items-center">
+  <h1 class="font-bold text-4xl">Audit Trails</h1>
+</div>
+
+<div id="system_permission_nodes"
+     class="white_card"
+     data-controller="datatablessr"
+     data-datatablessr-url-value="<%= system_audit_trails_path(request.query_parameters) %>"
+     data-datatablessr-columns-value="<%= @datatable_columns %>"
+     data-datatablessr-order-value="<%= @datatable_order %>"
+>
+  <table id="audit-trail-table" class="w-full" data-datatablessr-target="table">
+    <thead>
+    <tr>
+      <th>Event</th>
+      <th>Record ID</th>
+      <th>Actioned At</th>
+      <th>User</th>
+      <th>Changes</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+    // This function ensures the code runs only after the
+    // main datatablessr controller has initialized the DataTable.
+    function modifyAuditTrailTable() {
+        const tableElement = document.getElementById('audit-trail-table');
+        if (tableElement) {
+            // Find the DataTable instance
+            const dataTable = $(tableElement).DataTable();
+
+            // Re-configure the changes column
+            dataTable.column(4).nodes().to$().html(function(index) {
+                // Get the original data for this cell
+                const originalData = dataTable.cell(index, 4).data();
+                return originalData;
+            });
+        }
+    }
+
+    // Use a short delay to ensure the Stimulus controller has finished
+    setTimeout(modifyAuditTrailTable, 50);
+
+    // You can also listen for a Stimulus event if your controller dispatches one
+    // document.addEventListener('datatable:initialized', modifyAuditTrailTable);
+</script>

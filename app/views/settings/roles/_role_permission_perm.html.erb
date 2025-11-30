@@ -1,0 +1,25 @@
+<tr id="<%= dom_id permission %>" data-controller="tree" data-tree-depth="<%= depth %>">
+  <td class="ledger-content border-b border-gray-300">
+    <div class="grid grid-cols-5 gap-0">
+      <span class="col-span-3 overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer flex items-center">
+        <span class="pl-1" style="padding-left: <%= depth * 30 %>px;"><%= permission.permission.name %></span>
+      </span>
+      <span class="col-span-1">
+        <%= permission.permission.name %>
+      </span>
+      <span class="col-span-1 flex justify-end pr-4">
+        <%= check_box_tag(
+              "role_permission_#{permission.id}", # Name attribute (can be adjusted)
+              1,                                       # Value attribute (usually 1 for checked)
+              permission.can_access, # Checked state
+              class: 'checkbox checkbox-sm checkbox-primary',
+              data: {
+                controller: 'role-checkbox',
+                action: 'role-checkbox#updateModule',
+                url: update_permission_settings_roles_path(permission.id)
+              }
+            ) %>
+      </span>
+    </div>
+  </td>
+</tr>

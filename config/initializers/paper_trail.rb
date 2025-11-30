@@ -21,8 +21,8 @@ module PaperTrail
       else
         # Join with the user table for searching on full name
         # Use LEFT JOIN to include versions without a whodunnit
-        joins("LEFT JOIN settings_organization_users ON versions.whodunnit = settings_organization_users.id")
-          .where("CONCAT_WS('|', LOWER(versions.event), LOWER(versions.item_type), LOWER(COALESCE(settings_organization_users.firstname, ''), COALESCE(settings_organization_users.lastname, '')), LOWER(versions.whodunnit)) LIKE ?",
+        joins("LEFT JOIN users ON versions.whodunnit = users.id")
+          .where("CONCAT_WS('|', LOWER(versions.event), LOWER(versions.item_type), LOWER(COALESCE(users.firstname, ''), COALESCE(users.lastname, '')), LOWER(versions.whodunnit)) LIKE ?",
                  "%#{sanitize_sql_like(params[:query].downcase)}%")
       end
     end

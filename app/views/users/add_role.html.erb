@@ -1,0 +1,7 @@
+<% content_for :title, "Assign role" %>
+
+<%= turbo_frame_tag "modal" do %>
+  <%= render partial: "shared/modal_header", locals: { title: "Assign role"} %>
+
+  <%= render "add_role_form", user: @user %>
+<% end %>

@@ -8,9 +8,41 @@ Rails.application.routes.draw do
   end
   namespace :system do
     resources :businesses
+    resources :permission_nodes
+    resources :permissions
+    resources :audit_trails, only: [ :index ]
   end
   namespace :settings do
-    resources :branches
+    resources :branches do
+      member do
+        put :activate
+        put :close
+      end
+    end
+    resources :roles do
+      collection do
+        put "update_permission/:id", to: "roles#update_permission", as: "update_permission"
+      end
+    end
+  end
+  resources :users do
+    member do
+      get :add_role
+      get :add_branch
+      post :assign_role
+      post :attach_branch
+      post :revoke_role
+      post :detach_branch
+      get :generate_user_token
+      put :upload_photo
+      get :edit_photo
+      put :clear_photo
+    end
+    collection do
+      get :my_profile
+      get :change_password
+      patch :update_password
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

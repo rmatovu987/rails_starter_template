@@ -1,0 +1,70 @@
+<% content_for :title, "Users" %>
+
+<%= render 'shared/breadcrumbs' %>
+<div class="flex justify-between items-center">
+  <h1 class="font-bold text-4xl">Users</h1>
+  <% link_to "New user", new_user_path,
+              class: "btn btn-primary",
+              data: { turbo_frame: "modal" } %>
+</div>
+
+<div id="users" class="white_card">
+  <% if @users.any? %>
+    <table data-controller="datatable">
+      <thead>
+      <tr>
+        <th>Image</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Time Zone</th>
+        <th>Status</th>
+        <th>Assigned Branch</th>
+        <th>Last activity</th>
+        <th>Roles</th>
+        <th>Branches</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td>
+            <div class="avatar">
+              <div class="w-10 rounded-full ring-primary ring-offset-base-100 ring-2 ring-offset-2">
+                <% if user.avatar.attached? %>
+                  <%= image_tag user.avatar %>
+                <% else %>
+                  <%= image_tag 'avater.jpg', class: 'w-10 rounded-full' %>
+                <% end %>
+              </div>
+            </div>
+          </td>
+          <td>
+            <%= link_to user.unique_id, user %>
+          </td>
+          <td>
+            <%= user.firstname %> <%= user.lastname %>
+          </td>
+          <td><%= user.email_address %></td>
+          <td><%= user.time_zone %></td>
+          <td>
+            <% if user.status == 'Inactive' %>
+              <%= render partial: "shared/badge", locals: { status: Statuses::SECONDARY, label: user.status } %>
+            <% elsif user.status == 'Active' %>
+              <%= render partial: "shared/badge", locals: { status: Statuses::SUCCESS, label: user.status } %>
+            <% elsif user.status == 'Suspended' %>
+              <%= render partial: "shared/badge", locals: { status: Statuses::ERROR, label: user.status } %>
+            <% end %>
+          </td>
+          <td><%= user.assigned_branch.name %></td>
+          <td><%= user.sessions.any? ? format_time(user.sessions.last.last_access) : 'No activity' %></td>
+          <td><%= user.roles.count.to_s %></td>
+          <td><%= user.branches.count.to_s %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-center my-10">No users found.</p>
+  <% end %>
+</div>

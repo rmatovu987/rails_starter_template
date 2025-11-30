@@ -97,3 +97,7 @@ table.divide-y > thead > tr:not(:last-child) > th {
 table.dataTable > tbody > tr {
     @apply hover:bg-gray-100 dark:hover:bg-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-200;
 }
+
+#sub_accounts_table tbody tr:first-child {
+    border-top: 1px solid #a3a3a3 !important;
+}

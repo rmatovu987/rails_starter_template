@@ -1,0 +1,1 @@
+json.partial! "settings/system/permission_nodes/settings_system_permission_node", settings_system_permission_node: @settings_system_permission_node

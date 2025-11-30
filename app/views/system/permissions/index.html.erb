@@ -1,0 +1,38 @@
+<% content_for :title, "Permissions" %>
+
+<%= render 'shared/breadcrumbs' %>
+<div class="flex justify-between items-center">
+  <h1 class="font-bold text-4xl">Permissions</h1>
+  <%= link_to "New permission", new_settings_system_permission_path,
+              class: "btn btn-primary",
+              data: { turbo_frame: "modal" } %>
+</div>
+
+<div id="settings_system_permissions" class="white_card">
+  <% if @settings_system_permissions.any? %>
+    <table data-controller="datatable">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th class="no-export">Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @settings_system_permissions.each do |settings_system_permission| %>
+        <tr>
+          <td><%= settings_system_permission.unique_id %></td>
+          <td><%= settings_system_permission.name %></td>
+          <td><%= settings_system_permission.description %></td>
+          <td>
+            <%= link_to "View", settings_system_permission, class: "btn btn-primary" %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-center my-10">No permissions found.</p>
+  <% end %>
+</div>

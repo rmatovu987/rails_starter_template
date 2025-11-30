@@ -29,6 +29,11 @@ class User < ApplicationRecord
   belongs_to :assigned_branch, class_name: "Settings::Branch"
   belongs_to :business, class_name: "System::Business"
 
+  has_many :user_roles, class_name: "Settings::UserRole", dependent: :destroy
+  has_many :roles, through: :user_roles, class_name: "Settings::Role"
+
+  has_many :user_branches, class_name: "Settings::UserBranch", dependent: :destroy
+  has_many :branches, through: :user_branches, class_name: "Settings::Branch"
   enum :status, { inactive: 0, active: 1, suspended: 2, terminated: 3 }, default: :active, validate: true
 
   broadcasts_refreshes

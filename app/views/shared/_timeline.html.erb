@@ -1,0 +1,120 @@
+<% versions.sort_by(&:created_at).reverse.each_with_index do |version, index| %>
+  <% next unless evaluate_version(version) %>
+  <div class="flex gap-x-3">
+    <div class="relative <%= 'last:after:hidden' unless index < versions.length - 1 %> after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200 dark:after:bg-neutral-700">
+      <div class="relative z-10 size-7 flex justify-center items-center">
+        <div class="avatar avatar-placeholder">
+          <div class="bg-neutral text-neutral-content w-8 rounded-full">
+            <span class="text-1xl">
+              <%= version.full_name[0] %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grow pt-0.5 pb-8">
+      <h3 class="flex gap-x-1.5 font-semibold text-gray-800 dark:text-white">
+        <% if version.event == 'destroy' %>
+          <%= version.event.humanize %>ed <%= version.model %>
+        <% else %>
+          <% if version.item_type == 'Session' && version.event == 'update' %>
+            Terminated Session
+          <% elsif version.item_type == 'Session' && version.event == 'create' %>
+            Started Session
+          <% elsif version.event == 'attach_profile' %>
+            Attached Profile Picture
+          <% elsif version.event == 'detach_profile' %>
+            Detached Profile Picture
+          <% else %>
+            <%= version.event.humanize %>d <%= version.model %>
+          <% end %>
+        <% end %>
+      </h3>
+      <p class="mt-1 text-sm text-gray-600 dark:text-neutral-400">
+        <% if version.model == 'Session' %>
+          <% if version.event == 'create' %>
+            Logged in
+          <% elsif version.event == 'update' %>
+            Logged out
+          <% end %>
+        <% else %>
+          <% version.changeset.each do |field, value| %>
+            <% next if field == 'updated_at' %>
+            <% next if field == 'created_at' %>
+            <% next if field == 'business_id' %>
+            <% next if field == 'id' %>
+            <% next if field == 'lock_version' %>
+            <% next if field == 'encrypted_password' %>
+            <% next if field.downcase.include? 'customizable' %>
+            <% next if field.downcase.include? 'ratable' %>
+            <% next if field.downcase.include? 'cft_group' %>
+            <% next if field.downcase.include? 'cf_group' %>
+            <% next if field.downcase.include? 'auditable' %>
+            <% next if field.downcase.include? 'source' %>
+            <% next if field.downcase.include? 'recipient' %>
+            <% next if field.downcase.include?('password_digest') && version.event != 'update' %>
+            <% if field == 'password_digest' && version.event == 'update' %>
+              Updated Password
+            <% elsif version.event == 'attach_profile' %>
+              Profile photo attached
+            <% elsif version.event == 'detach_profile' %>
+              Profile photo deleted
+            <% elsif version.event == 'update' %>
+              <% if field.to_s.include?('_id') && field != 'unique_id' && field != 'field_identifier' %>
+                Changed <strong><%= field.humanize %></strong> from
+                <em><%= generate_audit_view_link_for_change(field, value[0], type: version.item_type) %></em> to
+                <em><%= generate_audit_view_link_for_change(field, value[1], type: version.item_type) %></em><br/>
+              <% elsif field.to_s.include?('date')%>
+                Changed <strong><%= field.humanize %></strong> from <em><%= format_time(humanize_label(value[0])) || '-' %></em> to
+                <em><%= format_time(humanize_label(value[1])) %></em><br/>
+              <% else %>
+                Changed <strong><%= field.humanize %></strong> from <em><%= humanize_label(value[0]) || '-' %></em> to
+                <em><%= humanize_label(value[1]) %></em><br/>
+              <% end %>
+            <% elsif version.event == 'create' %>
+              <% next if field == 'password_digest' %>
+              <% if field.to_s.include?('_id') && field != 'unique_id' && field != 'field_identifier' %>
+                <strong><%= field.humanize %>: </strong>
+                <em>
+                  <%= generate_audit_view_link_for_change(field, value[1], type: version.item_type) %>
+                </em><br/>
+              <% else %>
+                <strong><%= field.humanize %>: </strong> <em><%= humanize_label(value[1]) %></em><br/>
+              <% end %>
+            <% elsif version.event == 'destroy' %>
+              <% if field.to_s.include?('_id') && field != 'unique_id' && field != 'field_identifier' %>
+                <strong><%= field.humanize %></strong>
+                <em>
+                  <%= generate_audit_view_link_for_change(field, value[0], type: version.item_type) %>
+                </em><br/>
+              <% else %>
+                <strong><%= field.humanize %></strong> <em><%= humanize_label(value[0]) %></em><br/>
+              <% end %>
+            <% else %>
+              <%= field %>: <%= value %><br/>
+            <% end %>
+          <% end %>
+        <% end %>
+      </p>
+      <div class="flex gap-x-3 mt-1">
+        <div class="flex flex-wrap items-center">
+          <div class="avatar avatar-placeholder me-1">
+            <div class="bg-primary text-primary-content w-5 rounded-full">
+            <span class="text-xs">
+              <%= version.full_name[0] %>
+            </span>
+            </div>
+          </div>
+          <span class="text-xs font-medium text-gray-500 dark:text-neutral-400">
+            <%= version.full_name %>
+            (<%= format_time(version.created_at) %>)
+            <% if version.is_api %>
+              via API
+            <% end %>
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+<% end %>

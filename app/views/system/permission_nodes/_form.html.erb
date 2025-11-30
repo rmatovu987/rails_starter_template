@@ -1,0 +1,43 @@
+<%= form_with(model: settings_system_permission_node, class: "contents",
+              data: { controller: "form", action: "submit->form#submit", form_target: "form" }
+    ) do |form| %>
+  <% if settings_system_permission_node.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(settings_system_permission_node.errors.count, "error") %> prohibited this permission node from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% settings_system_permission_node.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :name %>
+    <%= form.text_field :name, autofocus: true, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": settings_system_permission_node.errors[:name].none?, "border-red-400 focus:outline-red-600": settings_system_permission_node.errors[:name].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :parent_id %>
+    <%= render partial: 'shared/select',
+               locals: {
+                 placeholder: "Select a parent",
+                 form: form,
+                 name: :parent_id,
+                 selected_option: settings_system_permission_node.parent_id,
+                 set_auto_focus: false,
+                 icon: nil,
+                 options: Settings::System::PermissionNode.all
+               } %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :path %>
+    <%= form.text_field :path, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": settings_system_permission_node.errors[:path].none?, "border-red-400 focus:outline-red-600": settings_system_permission_node.errors[:path].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full btn btn-primary" %>
+  </div>
+<% end %>

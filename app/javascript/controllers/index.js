@@ -30,3 +30,6 @@ application.register("select", SelectController)
 
 import ToastController from "./toast_controller"
 application.register("toast", ToastController)
+
+import TreeController from "./tree_controller"
+application.register("tree", TreeController)

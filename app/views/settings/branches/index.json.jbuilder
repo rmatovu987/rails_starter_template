@@ -1,1 +1,1 @@
-json.array! @system_branches, partial: "system/branches/system_branch", as: :system_branch
+json.array! @settings_branches, partial: "settings/branches/settings_branch", as: :settings_branch

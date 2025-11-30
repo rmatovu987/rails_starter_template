@@ -71,6 +71,40 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_024003) do
     t.index ["unique_id"], name: "index_businesses_on_unique_id_not_null", unique: true, where: "(unique_id IS NOT NULL)"
   end
 
+  create_table "permission_nodes", comment: "Hierarchical nodes representing permissions within a business", force: :cascade do |t|
+    t.bigint "business_id", null: false, comment: "Reference to the business this permission node belongs to"
+    t.datetime "created_at", null: false
+    t.string "encoded_key", comment: "Optional encoded key for internal reference"
+    t.boolean "is_model", default: false, null: false, comment: "Indicates if this node represents a model-level permission"
+    t.string "name", null: false, comment: "Human-readable name of the permission node"
+    t.bigint "parent_id", comment: "Optional reference to a parent permission node for hierarchy"
+    t.string "path", comment: "Materialized path or hierarchy path for tree structure"
+    t.integer "permission_nodes_count", default: 0, null: false, comment: "Counter cache for child nodes"
+    t.string "unique_id", comment: "Optional unique identifier within a business"
+    t.datetime "updated_at", null: false
+    t.index ["business_id", "name"], name: "index_permission_nodes_on_business_and_name", unique: true
+    t.index ["business_id", "unique_id"], name: "index_permission_nodes_on_business_and_unique_id", unique: true, where: "(unique_id IS NOT NULL)"
+    t.index ["business_id"], name: "index_permission_nodes_on_business_id"
+    t.index ["is_model"], name: "index_permission_nodes_on_is_model"
+    t.index ["parent_id"], name: "index_permission_nodes_on_parent_id"
+    t.index ["path"], name: "index_permission_nodes_on_path"
+    t.index ["permission_nodes_count"], name: "index_permission_nodes_on_permission_nodes_count"
+  end
+
+  create_table "permissions", comment: "System permissions for roles within a business", force: :cascade do |t|
+    t.bigint "business_id", null: false, comment: "Reference to the business this permission belongs to"
+    t.datetime "created_at", null: false
+    t.text "description", comment: "Optional description of what this permission allows"
+    t.string "encoded_key", comment: "Optional encoded key for internal reference"
+    t.string "name", null: false, comment: "Human-readable name of the permission"
+    t.string "unique_id", comment: "Optional unique identifier within a business"
+    t.datetime "updated_at", null: false
+    t.index ["business_id", "name"], name: "index_permissions_on_business_and_name", unique: true
+    t.index ["business_id", "unique_id"], name: "index_permissions_on_business_and_unique_id", unique: true, where: "(unique_id IS NOT NULL)"
+    t.index ["business_id"], name: "index_permissions_on_business_id"
+    t.index ["name"], name: "index_permissions_on_name"
+  end
+
   create_table "pg_search_documents", comment: "Table used by pg_search for multisearch across models", force: :cascade do |t|
     t.text "content", comment: "Searchable text extracted from associated records"
     t.datetime "created_at", null: false, comment: "Timestamps for tracking document creation and updates"
@@ -78,6 +112,42 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_024003) do
     t.string "searchable_type"
     t.datetime "updated_at", null: false, comment: "Timestamps for tracking document creation and updates"
     t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
+  end
+
+  create_table "role_permissions", comment: "Associates roles with permissions and permission nodes within a business, indicating access rights", force: :cascade do |t|
+    t.bigint "business_id", null: false, comment: "Reference to the business this role permission belongs to"
+    t.boolean "can_access", comment: "Indicates whether the role has access to this permission node"
+    t.datetime "created_at", null: false
+    t.string "encoded_key", comment: "Optional encoded key for internal reference"
+    t.bigint "permission_id", null: false, comment: "Reference to the permission"
+    t.bigint "permission_node_id", null: false, comment: "Reference to the permission node"
+    t.bigint "role_id", null: false, comment: "Reference to the role"
+    t.string "unique_id", comment: "Optional unique identifier within a business"
+    t.datetime "updated_at", null: false
+    t.index ["business_id", "role_id"], name: "index_role_permissions_on_business_and_role"
+    t.index ["business_id", "unique_id"], name: "index_role_permissions_on_business_and_unique_id", unique: true, where: "(unique_id IS NOT NULL)"
+    t.index ["business_id"], name: "index_role_permissions_on_business_id"
+    t.index ["can_access"], name: "index_role_permissions_on_can_access"
+    t.index ["permission_id"], name: "index_role_permissions_on_permission_id"
+    t.index ["permission_node_id"], name: "index_role_permissions_on_permission_node_id"
+    t.index ["role_id", "permission_id"], name: "index_role_permissions_on_role_and_permission"
+    t.index ["role_id", "permission_node_id"], name: "index_role_permissions_on_role_and_node"
+    t.index ["role_id"], name: "index_role_permissions_on_role_id"
+  end
+
+  create_table "roles", comment: "Roles within a business organization, defining permissions and access levels", force: :cascade do |t|
+    t.bigint "business_id", null: false, comment: "Reference to the business this role belongs to"
+    t.datetime "created_at", null: false
+    t.text "description", comment: "Optional description of the role"
+    t.string "encoded_key", comment: "Optional encoded key for internal reference"
+    t.string "name", null: false, comment: "Human-readable name of the role"
+    t.integer "status", default: 0, null: false, comment: "Status of the role (e.g., active, inactive)"
+    t.string "unique_id", comment: "Optional unique identifier within a business"
+    t.datetime "updated_at", null: false
+    t.index ["business_id", "name"], name: "index_roles_on_business_and_name", unique: true
+    t.index ["business_id", "unique_id"], name: "index_roles_on_business_and_unique_id", unique: true, where: "(unique_id IS NOT NULL)"
+    t.index ["business_id"], name: "index_roles_on_business_id"
+    t.index ["status"], name: "index_roles_on_status"
   end
 
   create_table "sessions", comment: "Stores user sessions with device, location, and risk information", force: :cascade do |t|
@@ -112,6 +182,37 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_024003) do
     t.index ["user_id", "business_id"], name: "index_sessions_active_user_business", where: "(expired_at IS NULL)"
     t.index ["user_id", "is_mobile"], name: "index_sessions_active_mobile", where: "((expired_at IS NULL) AND (is_mobile = true))"
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "user_branches", comment: "Associates users with branches within a business", force: :cascade do |t|
+    t.bigint "branch_id", null: false, comment: "Reference to the branch"
+    t.bigint "business_id", null: false, comment: "Reference to the owning business"
+    t.datetime "created_at", null: false
+    t.string "encoded_key", comment: "Optional encoded key for internal reference"
+    t.string "unique_id", comment: "Optional unique identifier within a business"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false, comment: "Reference to the user"
+    t.index ["branch_id"], name: "index_user_branches_on_branch_id"
+    t.index ["business_id", "branch_id", "user_id"], name: "index_user_branches_on_business_branch_user", unique: true
+    t.index ["business_id"], name: "index_user_branches_on_business_id"
+    t.index ["unique_id"], name: "index_user_branches_on_unique_id", unique: true, where: "(unique_id IS NOT NULL)"
+    t.index ["user_id", "branch_id"], name: "index_user_branches_active_user_branch"
+    t.index ["user_id"], name: "index_user_branches_on_user_id"
+  end
+
+  create_table "user_roles", comment: "Associates users with roles within a business", force: :cascade do |t|
+    t.bigint "business_id", null: false, comment: "Reference to the owning business"
+    t.datetime "created_at", null: false
+    t.string "encoded_key", comment: "Optional encoded key for internal reference"
+    t.bigint "role_id", null: false, comment: "Reference to the role"
+    t.string "unique_id", comment: "Optional unique identifier within a business"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false, comment: "Reference to the user"
+    t.index ["business_id", "user_id", "role_id"], name: "index_user_roles_on_business_user_role", unique: true
+    t.index ["business_id"], name: "index_user_roles_on_business_id"
+    t.index ["role_id"], name: "index_user_roles_on_role_id"
+    t.index ["unique_id"], name: "index_user_roles_on_unique_id", unique: true, where: "(unique_id IS NOT NULL)"
+    t.index ["user_id"], name: "index_user_roles_on_user_id"
   end
 
   create_table "users", comment: "Users belonging to a business, including branch assignments, roles, and authentication info", force: :cascade do |t|
@@ -159,8 +260,22 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_024003) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "branches", "businesses"
+  add_foreign_key "permission_nodes", "businesses"
+  add_foreign_key "permission_nodes", "permission_nodes", column: "parent_id"
+  add_foreign_key "permissions", "businesses"
+  add_foreign_key "role_permissions", "businesses"
+  add_foreign_key "role_permissions", "permission_nodes"
+  add_foreign_key "role_permissions", "permissions"
+  add_foreign_key "role_permissions", "roles"
+  add_foreign_key "roles", "businesses"
   add_foreign_key "sessions", "businesses"
   add_foreign_key "sessions", "users"
+  add_foreign_key "user_branches", "branches"
+  add_foreign_key "user_branches", "businesses"
+  add_foreign_key "user_branches", "users"
+  add_foreign_key "user_roles", "businesses"
+  add_foreign_key "user_roles", "roles"
+  add_foreign_key "user_roles", "users"
   add_foreign_key "users", "branches", column: "assigned_branch_id"
   add_foreign_key "users", "businesses"
   add_foreign_key "versions", "businesses"

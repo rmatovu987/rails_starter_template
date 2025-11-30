@@ -194,9 +194,7 @@ class UsersController < ApplicationController
     ]
     @versions = dependent_versions(@user,
                                    *@user&.user_roles,
-                                   *@user&.user_branches,
-                                   @user&.contact,
-                                   @user&.address)
+                                   *@user&.user_branches)
   end
 
   # GET /settings/organization/users/change_password

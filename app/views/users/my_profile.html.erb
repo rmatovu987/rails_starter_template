@@ -1,0 +1,225 @@
+<% content_for :title, "My Profile" %>
+
+<%= render 'shared/breadcrumbs' %>
+<div id="<%= dom_id @user %>">
+  <!-- Main content -->
+  <div class="h-[calc(100lvh_-_10.5rem)] flex flex-wrap ">
+    <div class="w-full md:w-2/3 md:overflow-scroll max-h-max md:max-h-full">
+      <div class="flex flex-col justify-center items-center p-1 mb-5">
+        <div class="avatar mb-5">
+          <div class="w-45 rounded-full ring-primary ring-offset-base-100 ring-2 ring-offset-2">
+            <% if @user.avatar.attached? %>
+              <%= image_tag @user.avatar %>
+            <% else %>
+              <%= image_tag 'avater.jpg', class: 'w-55 rounded-full' %>
+            <% end %>
+          </div>
+        </div>
+        <div class="flex align-middle justify-center items-center">
+          <% if @user.avatar.attached? %>
+            <%= link_to clear_photo_user_path(@user), class: "bg-error text-white p-2 rounded me-2", data: { turbo_method: :put } do %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2 shrink size-6">
+                <path d="M3 6h18"/>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                <line x1="10" x2="10" y1="11" y2="17"/>
+                <line x1="14" x2="14" y1="11" y2="17"/>
+              </svg>
+            <% end %>
+          <% end %>
+          <%= link_to edit_photo_user_path(@user), class: "bg-success text-white p-2 rounded", data: { turbo_frame: "modal" } do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen-icon lucide-square-pen shrink size-6">
+              <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/>
+            </svg>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="white_card_no_margin me-0 md:me-5 mt-5 md:mt-0">
+        <div class="flex flex-wrap">
+          <div class="w-full mb-2"><span class="card-title">Your details</span></div>
+          <div class="w-full flex space-y-4">
+            <div class="w-3/6 md:w-2/6 space-y-4">
+              <strong class=" description">ID:</strong>
+            </div>
+            <div class="leading-relaxed font-normal">
+              <%= @user.unique_id %>
+            </div>
+          </div>
+          <div class="w-full flex space-y-4">
+            <div class="w-3/6 md:w-2/6 space-y-4">
+              <strong class=" description">Encoded key:</strong>
+            </div>
+            <div class="leading-relaxed font-normal">
+              <%= @user.encoded_key %>
+            </div>
+          </div>
+          <div class="w-full flex space-y-4">
+            <div class="w-3/6 md:w-2/6 space-y-4">
+              <strong class=" description">Name:</strong>
+            </div>
+            <div class="leading-relaxed font-normal">
+              <%= @user.firstname %> <%= @user.lastname %>
+            </div>
+          </div>
+          <div class="w-full flex space-y-4">
+            <div class="w-3/6 md:w-2/6 space-y-4">
+              <strong class=" description">Email address:</strong>
+            </div>
+            <div class="leading-relaxed font-normal">
+              <%= @user.email_address %>
+            </div>
+          </div>
+          <div class="w-full flex space-y-4">
+            <div class="w-3/6 md:w-2/6 space-y-4">
+              <strong class=" description">Status:</strong>
+            </div>
+            <div class="leading-relaxed font-normal">
+              <% if @user.status == 'Inactive' %>
+                <%= render partial: "shared/badge", locals: { status: Statuses::SECONDARY, label: @user.status } %>
+              <% elsif @user.status == 'Active' %>
+                <%= render partial: "shared/badge", locals: { status: Statuses::SUCCESS, label: @user.status } %>
+              <% elsif @user.status == 'Suspended' %>
+                <%= render partial: "shared/badge", locals: { status: Statuses::ERROR, label: @user.status } %>
+              <% end %>
+            </div>
+          </div>
+          <div class="w-full flex space-y-4">
+            <div class="w-3/6 md:w-2/6 space-y-4">
+              <strong class=" description">Time Zone:</strong>
+            </div>
+            <div class="leading-relaxed font-normal">
+              <%= @user.time_zone %>
+            </div>
+          </div>
+          <div class="w-full flex space-y-4">
+            <div class="w-3/6 md:w-2/6 space-y-4">
+              <strong class=" description">Assigned Branch:</strong>
+            </div>
+            <div class="leading-relaxed font-normal">
+              <%= @user.assigned_branch.name %>
+            </div>
+          </div>
+          <% if @token %>
+            <div class="w-full flex space-y-4" data-controller="clipboard">
+              <div class="w-3/6 md:w-2/6 space-y-4">
+                <strong class=" description">API Authentication token:</strong>
+              </div>
+              <div class="leading-relaxed font-normal max-w-8/12 break-words border border-base-content/5 bg-base-200 rounded-box p-2">
+                <div data-clipboard-target="content">
+                  <%= @token %>
+                </div>
+                <div class="mt-2 flex align-middle">
+                <span data-action="click->clipboard#copy" class="text-blue-800 dark:text-blue-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                       class="lucide lucide-copy-icon lucide-copy">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                  </svg>
+                </span>
+                  <span data-clipboard-target="button" class="hidden ms-2 status_badge bg-emerald-100 text-emerald-800 dark:bg-emerald-800/30 dark:text-emerald-500"></span>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="w-full space-x-3 flex justify-end mt-6">
+          <%= link_to "Edit", edit_user_path(@user),
+                      class: "btn btn-primary", data: { turbo_frame: "modal" } %>
+
+          <%= link_to "Update Credentials", change_password_users_path,
+                      class: "btn btn-accent", data: { turbo_frame: "modal" } %>
+
+          <%= link_to "Get token", generate_user_token_user_path(@user),
+                      class: "btn btn-success" %>
+        </div>
+      </div>
+
+      <div class="white_card_no_margin lg:me-5 mt-5">
+        <div class="flex flex-wrap">
+          <div class="w-full mb-2  flex justify-between">
+            <span class="card-title">Your Roles</span>
+          </div>
+          <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 w-full">
+            <table class="table">
+              <!-- head -->
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Status</th>
+              </tr>
+              </thead>
+              <tbody>
+              <% @user.roles.each_with_index do |role, index| %>
+                <tr>
+                  <th><%= index + 1 %></th>
+                  <td><%= role.name %></td>
+                  <td><%= role.description %></td>
+                  <td>
+                    <% if role.status == 'Pending' %>
+                      <%= render partial: "shared/badge", locals: { status: Statuses::PRIMARY, label: role.status } %>
+                    <% elsif role.status == 'Active' %>
+                      <%= render partial: "shared/badge", locals: { status: Statuses::SUCCESS, label: role.status } %>
+                    <% elsif role.status == 'Inactive' %>
+                      <%= render partial: "shared/badge", locals: { status: Statuses::ERROR, label: role.status } %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="white_card_no_margin lg:me-5 mt-5">
+        <div class="flex flex-wrap">
+          <div class="w-full mb-2 flex justify-between">
+            <span class="card-title">Branches attached to</span>
+          </div>
+          <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 w-full">
+            <table class="table">
+              <!-- head -->
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Is Main</th>
+              </tr>
+              </thead>
+              <tbody>
+              <% @user.branches.each_with_index do |branch, index| %>
+                <tr>
+                  <th><%= index + 1 %></th>
+                  <td><%= branch.name %></td>
+                  <td>
+                    <% if branch.status == 'Pending' %>
+                      <%= render partial: "shared/badge", locals: { status: Statuses::SECONDARY, label: branch.status } %>
+                    <% elsif branch.status == 'Active' %>
+                      <%= render partial: "shared/badge", locals: { status: Statuses::SUCCESS, label: branch.status } %>
+                    <% elsif branch.status == 'Closed' %>
+                      <%= render partial: "shared/badge", locals: { status: Statuses::ERROR, label: branch.status } %>
+                    <% end %>
+                  </td>
+                  <td><%= branch.isMain ? 'Yes' : 'No' %></td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-full md:w-1/3 mt-5 md:mt-0 white_card_no_margin md:overflow-scroll max-h-max md:max-h-full">
+      <div class="font-bold text-2xl mb-4">Timeline</div>
+      <%= render partial: 'shared/timeline', locals: { versions: @versions } %>
+    </div>
+
+  </div>
+  <!-- End of main content -->
+</div>

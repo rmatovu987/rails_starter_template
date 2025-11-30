@@ -1,0 +1,31 @@
+<%= form_with(model: settings_role, class: "contents",
+              data: { controller: "form", action: "submit->form#submit", form_target: "form" }
+    ) do |form| %>
+  <% if settings_role.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(settings_role.errors.count, "error") %> prohibited this role from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% settings_role.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% disabled = settings_role.name == "Credit Officer" ? true : false %>
+
+  <div class="my-5">
+    <%= form.label :name %>
+    <%= form.text_field :name, autofocus: true, disabled: disabled, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": settings_role.errors[:name].none?, "border-red-400 focus:outline-red-600": settings_role.errors[:name].any?}, "disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 disabled:shadow-none dark:disabled:border-gray-700 dark:disabled:bg-gray-800/20"] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :description %>
+    <%= form.textarea :description, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": settings_role.errors[:description].none?, "border-red-400 focus:outline-red-600": settings_role.errors[:description].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "btn btn-primary w-full" %>
+  </div>
+<% end %>

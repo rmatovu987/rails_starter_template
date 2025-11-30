@@ -1,1 +1,1 @@
-json.partial! "system/branches/system_branch", system_branch: @system_branch
+json.partial! "settings/branches/settings_branch", settings_branch: @settings_branch

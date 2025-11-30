@@ -1,0 +1,7 @@
+<% content_for :title, "Editing user" %>
+
+<%= turbo_frame_tag "modal" do %>
+  <%= render partial: "shared/modal_header", locals: { title: "Edit User"} %>
+
+  <%= render "form", user: @user %>
+<% end %>

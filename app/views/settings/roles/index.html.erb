@@ -1,0 +1,49 @@
+<% content_for :title, "Roles" %>
+
+<%= render 'shared/breadcrumbs' %>
+<div class="flex justify-between items-center">
+  <h1 class="font-bold text-4xl">Roles</h1>
+  <%= link_to "New role", new_settings_role_path,
+              class: "btn btn-primary",
+              data: { turbo_frame: "modal" } %>
+</div>
+
+<div id="settings_roles" class="white_card">
+  <% if @settings_roles.any? %>
+    <table data-controller="datatable">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th class="no-export">Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @settings_roles.each do |settings_role| %>
+        <tr>
+          <td><%= settings_role.unique_id %></td>
+          <td><%= settings_role.name %></td>
+          <td><%= settings_role.description %></td>
+          <td>
+            <% if settings_role.status == 'pending' %>
+              <%= render partial: "shared/badge", locals: { status: Statuses::PRIMARY, label: settings_role.status } %>
+            <% elsif settings_role.status == 'active' %>
+              <%= render partial: "shared/badge", locals: { status: Statuses::SUCCESS, label: settings_role.status } %>
+            <% elsif settings_role.status == 'inactive' %>
+              <%= render partial: "shared/badge", locals: { status: Statuses::ERROR, label: settings_role.status } %>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to "View", settings_role, class: "btn btn-primary" %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-center my-10">No roles found.</p>
+  <% end %>
+</div>
+

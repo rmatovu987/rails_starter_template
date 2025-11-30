@@ -1,0 +1,7 @@
+<% content_for :title, "Update Profile Picture" %>
+
+<%= turbo_frame_tag "modal" do %>
+  <%= render partial: "shared/modal_header", locals: { title: "Update Profile Picture"} %>
+
+  <%= render "photo_form", user: @user %>
+<% end %>

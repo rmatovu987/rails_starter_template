@@ -1,0 +1,7 @@
+<% content_for :title, "Attach branch" %>
+
+<%= turbo_frame_tag "modal" do %>
+  <%= render partial: "shared/modal_header", locals: { title: "Attach branch"} %>
+
+  <%= render "add_branch_form", user: @user %>
+<% end %>

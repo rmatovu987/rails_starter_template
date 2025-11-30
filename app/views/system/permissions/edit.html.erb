@@ -1,0 +1,7 @@
+<% content_for :title, "Editing permission" %>
+
+<%= turbo_frame_tag "modal" do %>
+  <%= render partial: "shared/modal_header", locals: { title: "Edit Permission"} %>
+
+  <%= render "form", settings_system_permission: @settings_system_permission %>
+<% end %>

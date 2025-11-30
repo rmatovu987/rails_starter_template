@@ -1,0 +1,76 @@
+<tr id="<%= dom_id permission_node %>" data-controller="tree" data-tree-depth="<%= depth %>">
+  <td class="ledger-content border-b border-gray-300">
+    <div>
+      <div class="grid grid-cols-5 gap-0">
+        <span class="col-span-3 overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer
+        flex items-center"
+              data-action="click->tree#toggle">
+          <% if permission_node.permission_nodes_count.positive? %>
+            <span data-tree-target="icon" class="inline-block" style="padding-left: <%= depth * 30 %>px;">
+              <% if permission_node.permission_nodes_count.positive? %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round"
+                     class="lucide lucide-chevron-right-icon lucide-chevron-right [&>*]:data-[tree-depth]:pl-[calc(var(--depth)*30px)]">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              <% end %>
+            </span>
+          <% else %>
+            <span class="inline-block w-6" style="padding-left: <%= depth * 30 %>px;"></span>
+          <% end %>
+          <span class="pl-1"><%= permission_node.name %></span>
+        </span>
+        <% if permission_node.permission_nodes_count.positive? || permission_node.get_role_permission(@settings_role).count >= 2 %>
+          <span class="col-span-1"></span>
+        <%  else  %>
+          <span class="col-span-1">
+            <%=  permission_node.get_role_permission(@settings_role).first.permission.name  %>
+          </span>
+        <%  end %>
+        <span class="col-span-1  flex justify-end pr-4">
+          <% unless permission_node.permission_nodes_count.positive? || permission_node.get_role_permission(@settings_role).count >= 2 %>
+            <%= check_box_tag(
+                  "role_permission_#{permission_node.id}", # Name attribute (can be adjusted)
+                  1,                                       # Value attribute (usually 1 for checked)
+                  permission_node.get_role_permission(@settings_role).first.can_access, # Checked state
+                  class: 'checkbox checkbox-sm checkbox-primary',
+                  data: {
+                    controller: 'role-checkbox',
+                    action: 'role-checkbox#updateModule',
+                    url: update_permission_settings_roles_path(permission_node.get_role_permission(@settings_role).first.id)
+                  }
+                ) %>
+            </span>
+          <% end %>
+      </div>
+    </div>
+
+    <% if permission_node.permission_nodes_count.positive? %>
+      <div class="hidden" style=" margin-bottom: -0.6rem; margin-top: 0.6rem;"
+           data-tree-target="children">
+        <table class="table-auto w-full m-0 p-0" id="sub_accounts_table">
+          <tbody>
+          <% permission_node.children.each do |child| %>
+            <%= render partial: 'settings/roles/role_permission', locals: { permission_node: child,
+                                                                                         depth: depth + 1.2 } %>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+    <% if permission_node.get_role_permission(@settings_role).count >= 2 %>
+      <div class="" style=" margin-bottom: -0.6rem; margin-top: 0.6rem;"
+           data-tree-target="children">
+        <table class="table-auto w-full m-0 p-0" id="sub_accounts_table">
+          <tbody>
+          <% permission_node.get_role_permission(@settings_role).each do |child| %>
+            <%= render partial: 'settings/roles/role_permission_perm', locals: { permission: child,
+                                                                                         depth: depth + 1.2 } %>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </td>
+</tr>

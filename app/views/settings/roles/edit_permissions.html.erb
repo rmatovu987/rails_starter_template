@@ -1,0 +1,21 @@
+<h1>Edit Permissions for <%= @role.name %></h1>
+
+<%= form_with(model: @role, url: update_permissions_settings_role_path(@role), method: :put) do |form| %>
+  <% @permission_nodes.each do |node| %>
+    <div>
+      <h3><%= node.name %> (<%= node.path %>)</h3>
+      <% @permissions.each do |permission| %>
+        <% role_permission = @role.role_permissions.find_by(permission_node: node, permission: permission) %>
+        <div>
+          <%= check_box_tag "permissions[#{node.id}][#{permission.id}]", 1, role_permission&.can_access %>
+          <%= label_tag "permissions_#{node.id}_#{permission.id}", permission.name %>
+        </div>
+      <% end %>
+    </div>
+    <hr>
+  <% end %>
+
+  <%= form.submit "Update Permissions" %>
+<% end %>
+
+<%= link_to 'Back to Roles', settings_roles_path %>

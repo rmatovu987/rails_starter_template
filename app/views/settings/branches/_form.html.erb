@@ -1,17 +1,34 @@
-<%= simple_form_for(@settings_branch) do |f| %>
-<%= f.error_notification %>
-<%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+<%= form_with(model: settings_branch, class: "contents",
+              data: { controller: "form", action: "submit->form#submit", form_target: "form" }
+    ) do |form| %>
+  <% if settings_branch.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(settings_branch.errors.count, "error") %> prohibited this branch from being saved:</h2>
 
-<div class="form-inputs">
-      <%= f.input :name %>
-      <%= f.input :encoded_key %>
-      <%= f.input :unique_id %>
-      <%= f.input :isMain %>
-      <%= f.input :status %>
-      <%= f.association :business %>
-</div>
+      <ul class="list-disc ml-6">
+        <% settings_branch.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<div class="form-actions">
-  <%= f.button :submit %>
-</div>
+  <div class="my-5">
+    <%= form.label :name %>
+    <%= form.text_field :name, autofocus: true, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": settings_branch.errors[:name].none?, "border-red-400 focus:outline-red-600": settings_branch.errors[:name].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :code %>
+    <%= form.text_field :code, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": settings_branch.errors[:code].none?, "border-red-400 focus:outline-red-600": settings_branch.errors[:code].any?}] %>
+  </div>
+
+  <div class="my-5 flex items-center gap-2">
+    <%= form.label :isMain %>
+    <%= form.checkbox :isMain, class: ["block shadow-sm rounded-md border order-first h-5 w-5", {"border-gray-400 focus:outline-blue-600": settings_branch.errors[:isMain].none?, "border-red-400 focus:outline-red-600": settings_branch.errors[:isMain].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "btn btn-primary w-full" %>
+  </div>
 <% end %>
